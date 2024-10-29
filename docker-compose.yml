@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  bitcoind:
+    image: bitcoincore/bitcoind
+    volumes:
+      - bitcoin-data:/bitcoin/.bitcoin
+    ports:
+      - "8332:8332"  # RPC port
+      - "8333:8333"  # P2P port
+    command:
+      -printtoconsole
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcuser=user
+      -rpcpassword=password
+
+volumes:
+  bitcoin-data:

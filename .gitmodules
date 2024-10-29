@@ -1,0 +1,9 @@
+[submodule "corsa-reth"]
+	path = corsa-reth
+	url = git@github.com:OnCorsa/corsa-reth.git
+[submodule "corsascan"]
+	path = corsascan
+	url = git@github.com:OnCorsa/corsascan.git
+[submodule "contracts"]
+	path = contracts
+	url = git@github.com:OnCorsa/contracts.git
