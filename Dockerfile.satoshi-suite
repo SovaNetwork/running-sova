@@ -1,0 +1,52 @@
+FROM rust:1.82-bullseye
+
+# Install basic dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    curl \
+    libboost-all-dev \
+    bsdmainutils \
+    # Bitcoin Core build dependencies
+    autoconf \
+    automake \
+    libtool \
+    pkg-config \
+    python3 \
+    # Additional Bitcoin Core dependencies
+    libdb-dev \
+    libdb++-dev \
+    libssl-dev \
+    libevent-dev \
+    libminiupnpc-dev \
+    libnatpmp-dev \
+    libzmq3-dev \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure git to not verify host keys for github
+RUN git config --global core.sshConfig /etc/ssh/ssh_config && \
+    echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /etc/ssh/ssh_config
+
+# Configure git to use HTTPS instead of SSH
+RUN git config --global url."https://github.com/".insteadOf git@github.com:
+
+# Install just using cargo
+RUN cargo install just
+
+WORKDIR /app
+
+# Copy the necessary files
+COPY . .
+
+# Install dependencies
+RUN just install-deps
+
+# Build the project
+RUN just build
+
+# Create logs directory
+RUN mkdir -p /app/logs
+
+# CMD ["just", "help"]

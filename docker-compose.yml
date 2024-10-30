@@ -1,19 +1,40 @@
-version: '3.8'
+include:
+  - ./corsascan/docker-compose/geth.yml
 
 services:
-  bitcoind:
-    image: bitcoincore/bitcoind
+  satoshi-suite:
+    build:
+      context: ./satoshi-suite
+      dockerfile: ../Dockerfile.satoshi-suite
     volumes:
-      - bitcoin-data:/bitcoin/.bitcoin
+      - ./logs:/app/logs
+      - bitcoin-data:/root/.bitcoin
+    networks:
+      - corsa
     ports:
-      - "8332:8332"  # RPC port
-      - "8333:8333"  # P2P port
-    command:
-      -printtoconsole
-      -rpcallowip=0.0.0.0/0
-      -rpcbind=0.0.0.0
-      -rpcuser=user
-      -rpcpassword=password
+      - "5555:5555"
+    command: >
+      sh -c "just start-bitcoind > /app/logs/bitcoind.log &&
+             just mine-blocks user-1 101 &&
+             tail -f /app/logs/bitcoind.log"
+
+  corsa-reth:
+    build:
+      context: ./corsa-reth
+      dockerfile: Dockerfile
+    ports:
+      - "8545:8545"
+    networks:
+      - corsa
+    depends_on:
+      - satoshi-suite
+    command: >
+      sh -c "just run-chain > /app/logs/corsa-reth.log &&
+             tail -f /app/logs/corsa-reth.log"
+
+networks:
+  corsa:
+    driver: bridge
 
 volumes:
   bitcoin-data:
