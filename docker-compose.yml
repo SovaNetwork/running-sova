@@ -32,6 +32,26 @@ services:
       sh -c "just run-chain > /app/logs/corsa-reth.log &&
              tail -f /app/logs/corsa-reth.log"
 
+  faucet:
+    build:
+      context: ./faucet
+      dockerfile: Dockerfile
+    ports:
+      - "5556:5556"
+    networks:
+      - corsa
+    depends_on:
+      - corsa-reth
+    command: >
+      sh -c "corsa-testnet-faucet
+             --rpc-url http://corsa-reth:8545
+             --private-key YOUR_PRIVATE_KEY_HERE
+             --tokens-per-request 10000000000000000000
+             --port 5556
+             --host 0.0.0.0
+             --gas-price-gwei 1
+             --gas-limit 21000"
+
 networks:
   corsa:
     driver: bridge
