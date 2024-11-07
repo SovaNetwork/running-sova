@@ -13,3 +13,15 @@
 [submodule "faucet"]
 	path = faucet
 	url = git@github.com:OnCorsa/corsa-testnet-faucet.git
+[submodule "corsa-enclave"]
+	path = corsa-enclave
+	url = git@github.com:OnCorsa/corsa-enclave.git
+[submodule "hyperstate-indexer"]
+	path = hyperstate-indexer
+	url = git@github.com:OnCorsa/hyperstate-indexer.git
+[submodule "hyperstate-utxos"]
+	path = hyperstate-utxos
+	url = git@github.com:OnCorsa/hyperstate-utxos.git
+[submodule "bitcoin-tx-queue"]
+	path = bitcoin-tx-queue
+	url = git@github.com:OnCorsa/bitcoin-tx-queue.git
