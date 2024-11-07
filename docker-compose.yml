@@ -1,6 +1,3 @@
-include:
-  - ./corsascan/docker-compose/geth.yml
-
 services:
   satoshi-suite:
     build:
@@ -22,20 +19,83 @@ services:
     build:
       context: ./corsa-reth
       dockerfile: Dockerfile
+    environment:
+      - BTC_NETWORK=regtest
+      - BTC_RPC_URL=http://satoshi-suite
+      - BTC_RPC_USER=user
+      - BTC_RPC_PASSWORD=password
+      - NETWORK_SIGNING_URL=http://corsa-enclave:5555
+      - NETWORK_UTXO_URL=http://hyperstate-utxos:5557
+      - BTX_TX_QUEUE_URL=http://bitcoin-tx-queue:5558
     ports:
       - "8545:8545"
     networks:
       - corsa
     depends_on:
       - satoshi-suite
-    command: >
-      sh -c "just run-chain > /app/logs/corsa-reth.log &&
-             tail -f /app/logs/corsa-reth.log"
+
+  corsa-enclave:
+    build:
+      context: ./corsa-enclave
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
+    ports:
+      - "5555:5555"
+    networks:
+      - corsa
+    depends_on:
+      - corsa-reth
+
+  hyperstate-utxos:
+    build:
+      context: ./contracts
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
+    ports:
+      - "5557:5557"
+    networks:
+      - corsa
+    depends_on:
+      - corsa-reth
+
+  bitcoin-tx-queue:
+    build:
+      context: ./satoshi-suite
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
+    ports:
+      - "5558:5558"
+    networks:
+      - corsa
+    depends_on:
+      - corsa-reth
+
+  hyperstate-indexer:
+    build:
+      context: ./hyperstate-indexer
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
+      - WEBHOOK_URL=http://hyperstate-utxos:5557/hook
+      - RPC_HOST=satoshi-suite
+      - RPC_PORT=18443
+      - RPC_USER=user
+      - RPC_PASSWORD=password
+    networks:
+      - corsa
+    depends_on:
+      - hyperstate-utxos
+      - satoshi-suite
 
   faucet:
     build:
       context: ./faucet
       dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
     ports:
       - "5556:5556"
     networks:
@@ -43,14 +103,14 @@ services:
     depends_on:
       - corsa-reth
     command: >
-      sh -c "corsa-testnet-faucet
-             --rpc-url http://corsa-reth:8545
-             --private-key YOUR_PRIVATE_KEY_HERE
-             --tokens-per-request 10000000000000000000
-             --port 5556
-             --host 0.0.0.0
-             --gas-price-gwei 1
-             --gas-limit 21000"
+      corsa-testnet-faucet
+      --rpc-url "http://corsa-reth:8545"
+      --private-key "YOUR_PRIVATE_KEY_HERE"
+      --tokens-per-request 10000000000000000000
+      --port 5556
+      --host 0.0.0.0
+      --gas-price-gwei 1
+      --gas-limit 21000
 
 networks:
   corsa:
@@ -58,3 +118,4 @@ networks:
 
 volumes:
   bitcoin-data:
+  logs:
