@@ -7,9 +7,6 @@
 [submodule "contracts"]
 	path = contracts
 	url = git@github.com:OnCorsa/contracts.git
-[submodule "satoshi-suite"]
-	path = satoshi-suite
-	url = git@github.com:PowVT/satoshi-suite.git
 [submodule "faucet"]
 	path = faucet
 	url = git@github.com:OnCorsa/corsa-testnet-faucet.git
