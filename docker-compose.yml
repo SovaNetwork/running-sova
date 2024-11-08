@@ -1,19 +1,25 @@
 services:
-  satoshi-suite:
-    build:
-      context: ./satoshi-suite
-      dockerfile: ../Dockerfile.satoshi-suite
-    volumes:
-      - ./logs:/app/logs
-      - bitcoin-data:/root/.bitcoin
+  bitcoin-regtest:
+    image: ruimarinho/bitcoin-core:latest
+    command:
+      -regtest=1
+      -server=1
+      -txindex=1
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcuser=user
+      -rpcpassword=password
+    ports:
+      - "18443:18443"
     networks:
       - corsa
-    ports:
-      - "5555:5555"
-    command: >
-      sh -c "just start-bitcoind > /app/logs/bitcoind.log &&
-             just mine-blocks user-1 101 &&
-             tail -f /app/logs/bitcoind.log"
+    volumes:
+      - bitcoin-data:/data
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-regtest", "-rpcuser=user", "-rpcpassword=password", "getblockchaininfo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   corsa-reth:
     build:
@@ -21,7 +27,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - BTC_NETWORK=regtest
-      - BTC_RPC_URL=http://satoshi-suite
+      - BTC_RPC_URL=http://bitcoin-regtest
       - BTC_RPC_USER=user
       - BTC_RPC_PASSWORD=password
       - NETWORK_SIGNING_URL=http://corsa-enclave:5555
@@ -32,7 +38,36 @@ services:
     networks:
       - corsa
     depends_on:
-      - satoshi-suite
+      bitcoin-regtest:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-H", "Content-Type: application/json", "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}', "http://localhost:8545"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  bitcoin-tx-queue:
+    build:
+      context: ./bitcoin-tx-queue
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
+    ports:
+      - "5558:5558"
+    command: [
+      "bitcoin-tx-queue",
+      "--host", "0.0.0.0",
+      "--port", "5558",
+      "--bitcoin-url", "http://bitcoin-regtest",
+      "--network", "regtest",
+      "--rpc-username", "user",
+      "--rpc-password", "password"
+    ]
+    networks:
+      - corsa
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
 
   corsa-enclave:
     build:
@@ -42,36 +77,35 @@ services:
       - RUST_LOG=info
     ports:
       - "5555:5555"
+    command: >
+      corsa-enclave
+      --host 0.0.0.0
+      --port 5555
+      --seed 000102030405060708090a0b0c0d0e0f
     networks:
       - corsa
     depends_on:
-      - corsa-reth
+      corsa-reth:
+        condition: service_started
 
   hyperstate-utxos:
     build:
-      context: ./contracts
+      context: ./hyperstate-utxos
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
     ports:
       - "5557:5557"
+    command: >
+      hyperstate-utxos
+      --host 0.0.0.0
+      --port 5557
+      --log-level info
     networks:
       - corsa
     depends_on:
-      - corsa-reth
-
-  bitcoin-tx-queue:
-    build:
-      context: ./satoshi-suite
-      dockerfile: Dockerfile
-    environment:
-      - RUST_LOG=info
-    ports:
-      - "5558:5558"
-    networks:
-      - corsa
-    depends_on:
-      - corsa-reth
+      corsa-reth:
+        condition: service_started
 
   hyperstate-indexer:
     build:
@@ -79,16 +113,22 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
-      - WEBHOOK_URL=http://hyperstate-utxos:5557/hook
-      - RPC_HOST=satoshi-suite
-      - RPC_PORT=18443
-      - RPC_USER=user
-      - RPC_PASSWORD=password
     networks:
       - corsa
     depends_on:
-      - hyperstate-utxos
-      - satoshi-suite
+      bitcoin-regtest:
+        condition: service_healthy
+      hyperstate-utxos:
+        condition: service_started
+    command: [
+      "hyperstate-indexer",
+      "--webhook-url", "http://hyperstate-utxos:5557/hook",
+      "--rpc-host", "bitcoin-regtest",
+      "--rpc-port", "18443",
+      "--rpc-user", "user",
+      "--rpc-password", "password",
+      "--start-height", "0"
+    ]
 
   faucet:
     build:
@@ -96,21 +136,19 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
+      - FAUCET_PRIVATE_KEY=${FAUCET_PRIVATE_KEY}
     ports:
       - "5556:5556"
     networks:
       - corsa
     depends_on:
-      - corsa-reth
-    command: >
-      corsa-testnet-faucet
-      --rpc-url "http://corsa-reth:8545"
-      --private-key "YOUR_PRIVATE_KEY_HERE"
-      --tokens-per-request 10000000000000000000
-      --port 5556
-      --host 0.0.0.0
-      --gas-price-gwei 1
-      --gas-limit 21000
+      corsa-reth:
+        condition: service_healthy
+    command: [
+      "--rpc-url", "http://corsa-reth:8545",
+      "--private-key", "${FAUCET_PRIVATE_KEY}",
+      "--host", "0.0.0.0"
+    ]
 
 networks:
   corsa:
