@@ -115,6 +115,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
+      - INDEXER_START_BLOCK=${INDEXER_START_BLOCK}
     networks:
       - corsa
     depends_on:
@@ -129,7 +130,7 @@ services:
       "--rpc-port", "18443",
       "--rpc-user", "user",
       "--rpc-password", "password",
-      "--start-height", "0"
+      "--start-height", "${INDEXER_START_BLOCK}"
     ]
 
   faucet:
