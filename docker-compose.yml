@@ -1,4 +1,15 @@
 services:
+  nginx-proxy:
+    image: nginx:alpine
+    ports:
+      - "18444:18444"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - corsa
+    depends_on:
+      - bitcoin-regtest
+  
   bitcoin-regtest:
     image: ruimarinho/bitcoin-core:latest
     command:
