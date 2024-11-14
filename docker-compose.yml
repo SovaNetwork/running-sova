@@ -103,6 +103,8 @@ services:
       --log-level info
     networks:
       - corsa
+    volumes:
+      - utxo-data:/data
     depends_on:
       corsa-reth:
         condition: service_started
@@ -157,3 +159,4 @@ networks:
 volumes:
   bitcoin-data:
   logs:
+  utxo-data:
