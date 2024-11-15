@@ -25,7 +25,7 @@ services:
     networks:
       - corsa
     volumes:
-      - bitcoin-data:/data
+      - bitcoin-data:/home/bitcoin/.bitcoin
     healthcheck:
       test: ["CMD", "bitcoin-cli", "-regtest", "-rpcuser=user", "-rpcpassword=password", "getblockchaininfo"]
       interval: 5s
