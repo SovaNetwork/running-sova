@@ -16,3 +16,6 @@
 [submodule "bitcoin-tx-queue"]
 	path = bitcoin-tx-queue
 	url = git@github.com:OnCorsa/bitcoin-tx-queue.git
+[submodule "lib/forge-std"]
+	path = lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
