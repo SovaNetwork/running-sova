@@ -80,16 +80,16 @@ services:
       bitcoin-regtest:
         condition: service_healthy
 
-  corsa-enclave:
+  hyperstate-enclave:
     build:
-      context: ./corsa-enclave
+      context: ./hyperstate-enclave
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
     ports:
       - "5555:5555"
     command: >
-      corsa-enclave
+      hyperstate-enclave
       --host 0.0.0.0
       --port 5555
       --seed 000102030405060708090a0b0c0d0e0f
@@ -112,6 +112,7 @@ services:
       --host 0.0.0.0
       --port 5557
       --log-level info
+      --datasource sqlite
     networks:
       - corsa
     volumes:
@@ -144,9 +145,9 @@ services:
       "--start-height", "${INDEXER_START_BLOCK}"
     ]
 
-  faucet:
+  hyperstate-testnet-faucet:
     build:
-      context: ./faucet
+      context: ./hyperstate-testnet-faucet
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
