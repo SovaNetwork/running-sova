@@ -1,18 +1,18 @@
-[submodule "corsa-reth"]
-	path = corsa-reth
-	url = git@github.com:OnCorsa/corsa-reth.git
+[submodule "sova-reth"]
+	path = sova-reth
+	url = git@github.com:SovaNetwork/sova-reth.git
 [submodule "hyperstate-testnet-faucet"]
 	path = hyperstate-testnet-faucet
-	url = git@github.com:OnCorsa/hyperstate-testnet-faucet.git
+	url = git@github.com:SovaNetwork/hyperstate-testnet-faucet.git
 [submodule "hyperstate-enclave"]
 	path = hyperstate-enclave
-	url = git@github.com:OnCorsa/hyperstate-enclave.git
+	url = git@github.com:SovaNetwork/hyperstate-enclave.git
 [submodule "hyperstate-indexer"]
 	path = hyperstate-indexer
-	url = git@github.com:OnCorsa/hyperstate-indexer.git
+	url = git@github.com:SovaNetwork/hyperstate-indexer.git
 [submodule "hyperstate-utxos"]
 	path = hyperstate-utxos
-	url = git@github.com:OnCorsa/hyperstate-utxos.git
+	url = git@github.com:SovaNetwork/hyperstate-utxos.git
 [submodule "bitcoin-tx-queue"]
 	path = bitcoin-tx-queue
-	url = git@github.com:OnCorsa/bitcoin-tx-queue.git
+	url = git@github.com:SovaNetwork/bitcoin-tx-queue.git
