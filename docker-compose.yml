@@ -6,7 +6,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      - hyperstate
+      - sova_network
     depends_on:
       - bitcoin-regtest
   
@@ -23,7 +23,7 @@ services:
     ports:
       - "18443:18443"
     networks:
-      - hyperstate
+      - sova_network
     volumes:
       - bitcoin-data:/home/bitcoin/.bitcoin
     healthcheck:
@@ -39,9 +39,9 @@ services:
       timeout: 5s
       retries: 5
 
-  corsa-reth:
+  sova-reth:
     build:
-      context: ./corsa-reth
+      context: ./sova-reth
       dockerfile: Dockerfile
     environment:
       - BTC_NETWORK=regtest
@@ -50,11 +50,11 @@ services:
       - BTC_RPC_PASSWORD=password
       - NETWORK_SIGNING_URL=http://hyperstate-enclave:5555
       - NETWORK_UTXO_URL=http://hyperstate-utxos:5557
-      - BTX_TX_QUEUE_URL=http://bitcoin-tx-queue:5558
+      - BTC_TX_QUEUE_URL=http://bitcoin-tx-queue:5558
     ports:
       - "8545:8545"
     networks:
-      - hyperstate
+      - sova_network
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
@@ -66,7 +66,7 @@ services:
         "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
         "http://localhost:8545"
       ]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 5
 
@@ -88,7 +88,7 @@ services:
       "--rpc-password", "password"
     ]
     networks:
-      - hyperstate
+      - sova_network
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
@@ -108,10 +108,7 @@ services:
       --port 5555
       --seed ${ENCLAVE_SEED}
     networks:
-      - hyperstate
-    depends_on:
-      corsa-reth:
-        condition: service_started
+      - sova_network
 
   hyperstate-utxos:
     build:
@@ -128,12 +125,9 @@ services:
       --log-level info
       --datasource sqlite
     networks:
-      - hyperstate
+      - sova_network
     volumes:
       - utxo-data:/data
-    depends_on:
-      corsa-reth:
-        condition: service_started
 
   hyperstate-indexer:
     build:
@@ -143,7 +137,7 @@ services:
       - RUST_LOG=info
       - INDEXER_START_BLOCK=${INDEXER_START_BLOCK}
     networks:
-      - hyperstate
+      - sova_network
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
@@ -169,18 +163,18 @@ services:
     ports:
       - "5556:5556"
     networks:
-      - hyperstate
+      - sova_network
     depends_on:
-      corsa-reth:
+      sova-reth:
         condition: service_healthy
     command: [
-      "--rpc-url", "http://corsa-reth:8545",
+      "--rpc-url", "http://sova-reth:8545",
       "--private-key", "${FAUCET_PRIVATE_KEY}",
       "--host", "0.0.0.0"
     ]
 
 networks:
-  hyperstate:
+  sova_network:
     driver: bridge
 
 volumes:
