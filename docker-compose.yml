@@ -51,10 +51,14 @@ services:
       - NETWORK_SIGNING_URL=http://hyperstate-enclave:5555
       - NETWORK_UTXO_URL=http://hyperstate-utxos:5557
       - BTC_TX_QUEUE_URL=http://bitcoin-tx-queue:5558
+      - CHAIN=dev
+      - TRACE_LEVEL=info
     ports:
       - "8545:8545"
     networks:
       - sova_network
+    volumes:
+      - sova-data:/var/lib/sova
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
@@ -180,4 +184,5 @@ networks:
 volumes:
   bitcoin-data:
   logs:
+  sova-data:
   utxo-data:
