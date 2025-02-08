@@ -4,9 +4,9 @@
 [submodule "hyperstate-testnet-faucet"]
 	path = hyperstate-testnet-faucet
 	url = git@github.com:SovaNetwork/hyperstate-testnet-faucet.git
-[submodule "hyperstate-enclave"]
-	path = hyperstate-enclave
-	url = git@github.com:SovaNetwork/hyperstate-enclave.git
+[submodule "network-enclave"]
+	path = network-enclave
+	url = git@github.com:SovaNetwork/network-enclave.git
 [submodule "hyperstate-indexer"]
 	path = hyperstate-indexer
 	url = git@github.com:SovaNetwork/hyperstate-indexer.git
