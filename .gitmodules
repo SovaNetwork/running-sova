@@ -7,9 +7,9 @@
 [submodule "network-enclave"]
 	path = network-enclave
 	url = git@github.com:SovaNetwork/network-enclave.git
-[submodule "hyperstate-indexer"]
-	path = hyperstate-indexer
-	url = git@github.com:SovaNetwork/hyperstate-indexer.git
+[submodule "network-indexer"]
+	path = network-indexer
+	url = git@github.com:SovaNetwork/network-indexer.git
 [submodule "network-utxos"]
 	path = network-utxos
 	url = git@github.com:SovaNetwork/network-utxos.git
