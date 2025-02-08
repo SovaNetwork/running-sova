@@ -1,9 +1,9 @@
 [submodule "sova-reth"]
 	path = sova-reth
 	url = git@github.com:SovaNetwork/sova-reth.git
-[submodule "hyperstate-testnet-faucet"]
-	path = hyperstate-testnet-faucet
-	url = git@github.com:SovaNetwork/hyperstate-testnet-faucet.git
+[submodule "testnet-faucet"]
+	path = testnet-faucet
+	url = git@github.com:SovaNetwork/testnet-faucet.git
 [submodule "network-enclave"]
 	path = network-enclave
 	url = git@github.com:SovaNetwork/network-enclave.git
