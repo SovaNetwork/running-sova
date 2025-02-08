@@ -13,6 +13,6 @@
 [submodule "hyperstate-utxos"]
 	path = hyperstate-utxos
 	url = git@github.com:SovaNetwork/hyperstate-utxos.git
-[submodule "bitcoin-tx-queue"]
-	path = bitcoin-tx-queue
-	url = git@github.com:SovaNetwork/bitcoin-tx-queue.git
+[submodule "btc-broadcast-service"]
+	path = btc-broadcast-service
+	url = git@github.com:SovaNetwork/btc-broadcast-service.git
