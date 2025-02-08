@@ -74,16 +74,16 @@ services:
       timeout: 10s
       retries: 5
 
-  bitcoin-tx-queue:
+  btc-broadcast-service:
     build:
-      context: ./bitcoin-tx-queue
+      context: ./btc-broadcast-service
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
     ports:
       - "5558:5558"
     command: [
-      "bitcoin-tx-queue",
+      "btc-broadcast-service",
       "--host", "0.0.0.0",
       "--port", "5558",
       "--bitcoin-url", "http://bitcoin-regtest",
@@ -97,9 +97,9 @@ services:
       bitcoin-regtest:
         condition: service_healthy
 
-  hyperstate-enclave:
+  network-enclave:
     build:
-      context: ./hyperstate-enclave
+      context: ./network-enclave
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
@@ -107,23 +107,23 @@ services:
     ports:
       - "5555:5555"
     command: >
-      hyperstate-enclave
+      network-enclave
       --host 0.0.0.0
       --port 5555
       --seed ${ENCLAVE_SEED}
     networks:
       - sova_network
 
-  hyperstate-utxos:
+  network-utxos:
     build:
-      context: ./hyperstate-utxos
+      context: ./network-utxos
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
     ports:
       - "5557:5557"
     command: >
-      hyperstate-utxos
+      network-utxos
       --host 0.0.0.0
       --port 5557
       --log-level info
@@ -133,9 +133,9 @@ services:
     volumes:
       - utxo-data:/data
 
-  hyperstate-indexer:
+  network-indexer:
     build:
-      context: ./hyperstate-indexer
+      context: ./network-indexer
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
@@ -145,11 +145,11 @@ services:
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
-      hyperstate-utxos:
+      network-utxos:
         condition: service_started
     command: [
-      "hyperstate-indexer",
-      "--webhook-url", "http://hyperstate-utxos:5557/hook",
+      "network-indexer",
+      "--webhook-url", "http://network-utxos:5557/hook",
       "--rpc-host", "bitcoin-regtest",
       "--rpc-port", "18443",
       "--rpc-user", "user",
@@ -157,9 +157,9 @@ services:
       "--start-height", "${INDEXER_START_BLOCK}"
     ]
 
-  hyperstate-testnet-faucet:
+  testnet-faucet:
     build:
-      context: ./hyperstate-testnet-faucet
+      context: ./testnet-faucet
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
