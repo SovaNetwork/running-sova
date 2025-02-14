@@ -48,9 +48,9 @@ services:
       - BTC_RPC_URL=http://bitcoin-regtest
       - BTC_RPC_USER=user
       - BTC_RPC_PASSWORD=password
-      - NETWORK_SIGNING_URL=http://hyperstate-enclave:5555
-      - NETWORK_UTXO_URL=http://hyperstate-utxos:5557
-      - BTC_TX_QUEUE_URL=http://bitcoin-tx-queue:5558
+      - NETWORK_SIGNING_URL=http://network-enclave:5555
+      - NETWORK_UTXO_URL=http://network-utxos:5557
+      - BTC_TX_QUEUE_URL=http://btc-broadcast-service:5558
       - CHAIN=dev
       - TRACE_LEVEL=info
     ports:
@@ -102,7 +102,7 @@ services:
       context: ./network-enclave
       dockerfile: Dockerfile
     environment:
-      - RUST_LOG=info
+      - RUST_LOG=debug
       - ENCLAVE_SEED=${ENCLAVE_SEED}
     ports:
       - "5555:5555"
