@@ -114,48 +114,45 @@ services:
     networks:
       - sova_network
 
-  network-utxos:
+  network-indexer:
     build:
-      context: ./network-utxos
-      dockerfile: Dockerfile
+      context: ./utxo-tracing
+      dockerfile: ./indexer/Dockerfile
     environment:
       - RUST_LOG=info
+      - RPC_HOST=bitcoin-regtest
+      - RPC_PORT=18443
+      - RPC_USER=user
+      - RPC_PASSWORD=password
+      - SOCKET_PATH=/tmp/network-utxos.sock
+      - START_HEIGHT=${INDEXER_START_BLOCK:-0}
+      - POLLING_RATE=${INDEXER_POLLING_RATE:-500}
+      - MAX_BLOCKS_PER_BATCH=${INDEXER_MAX_BLOCKS:-200}
+    networks:
+      - sova_network
+    depends_on:
+      - network-utxos
+    volumes:
+      - socket:/tmp
+
+  network-utxos:
+    build:
+      context: ./utxo-tracing
+      dockerfile: ./storage/Dockerfile
+    environment:
+      - RUST_LOG=info
+      - HOST=0.0.0.0
+      - PORT=5557
+      - LOG_LEVEL=info
+      - DATASOURCE=sqlite
+      - SOCKET_PATH=/tmp/network-utxos.sock
     ports:
       - "5557:5557"
-    command: >
-      network-utxos
-      --host 0.0.0.0
-      --port 5557
-      --log-level info
-      --datasource sqlite
     networks:
       - sova_network
     volumes:
       - utxo-data:/data
-
-  network-indexer:
-    build:
-      context: ./network-indexer
-      dockerfile: Dockerfile
-    environment:
-      - RUST_LOG=info
-      - INDEXER_START_BLOCK=${INDEXER_START_BLOCK}
-    networks:
-      - sova_network
-    depends_on:
-      bitcoin-regtest:
-        condition: service_healthy
-      network-utxos:
-        condition: service_started
-    command: [
-      "network-indexer",
-      "--webhook-url", "http://network-utxos:5557/hook",
-      "--rpc-host", "bitcoin-regtest",
-      "--rpc-port", "18443",
-      "--rpc-user", "user",
-      "--rpc-password", "password",
-      "--start-height", "${INDEXER_START_BLOCK}"
-    ]
+      - socket:/tmp
 
   testnet-faucet:
     build:
@@ -186,3 +183,4 @@ volumes:
   logs:
   sova-data:
   utxo-data:
+  socket:
