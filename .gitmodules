@@ -7,12 +7,9 @@
 [submodule "network-enclave"]
 	path = network-enclave
 	url = git@github.com:SovaNetwork/network-enclave.git
-[submodule "network-indexer"]
-	path = network-indexer
-	url = git@github.com:SovaNetwork/network-indexer.git
-[submodule "network-utxos"]
-	path = network-utxos
-	url = git@github.com:SovaNetwork/network-utxos.git
 [submodule "btc-broadcast-service"]
 	path = btc-broadcast-service
 	url = git@github.com:SovaNetwork/btc-broadcast-service.git
+[submodule "utxo-tracing"]
+	path = utxo-tracing
+	url = git@github.com:SovaNetwork/utxo-tracing.git
