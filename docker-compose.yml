@@ -131,7 +131,9 @@ services:
     networks:
       - sova_network
     depends_on:
+      - bitcoin-regtest
       - network-utxos
+
     volumes:
       - socket:/tmp
 
