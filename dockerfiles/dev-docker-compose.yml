@@ -1,0 +1,197 @@
+# This docker-compose file is used to run all Sova local Devnet services.
+# In a production environment, this should not be used. It is intended to be used
+# for testing and development purposes only.
+services:
+  nginx-proxy:
+    image: nginx:alpine
+    ports:
+      - "18444:18444"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - sova_network
+    depends_on:
+      - bitcoin-regtest
+  
+  bitcoin-regtest:
+    image: ruimarinho/bitcoin-core@sha256:79dd32455cf8c268c63e5d0114cc9882a8857e942b1d17a6b8ec40a6d44e3981 # ruimarinho/bitcoin-core:24
+    command:
+      -regtest=1
+      -server=1
+      -txindex=1
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcuser=user
+      -rpcpassword=password
+    ports:
+      - "18443:18443"
+    networks:
+      - sova_network
+    volumes:
+      - bitcoin-data:/home/bitcoin/.bitcoin
+    healthcheck:
+      test: [
+        "CMD",
+        "bitcoin-cli",
+        "-regtest",
+        "-rpcuser=user",
+        "-rpcpassword=password",
+        "getblockchaininfo"
+      ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  sova-reth:
+    build:
+      context: ./sova-reth
+      dockerfile: Dockerfile
+    environment:
+      - BTC_NETWORK=regtest
+      - BTC_RPC_URL=http://bitcoin-regtest
+      - BTC_RPC_USER=user
+      - BTC_RPC_PASSWORD=password
+      - NETWORK_SIGNING_URL=http://network-enclave:5555
+      - NETWORK_UTXO_URL=http://network-utxos:5557
+      - BTC_TX_QUEUE_URL=http://btc-broadcast-service:5558
+      - SENTINEL_URL=http://sentinel-server:50051
+      - CHAIN=dev
+      - TRACE_LEVEL=info
+    ports:
+      - "8545:8545"
+    networks:
+      - sova_network
+    volumes:
+      - validator-data:/var/lib/sova
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
+    healthcheck:
+      test: [
+        "CMD",
+        "curl",
+        "-H", "Content-Type: application/json",
+        "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
+        "http://localhost:8545"
+      ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  sentinel-server:
+    build:
+      context: ./sova-sentinel
+      dockerfile: Dockerfile
+    environment:
+      - SOVA_SENTINEL_HOST=0.0.0.0
+      - SOVA_SENTINEL_PORT=50051
+      - SOVA_SENTINEL_DB_PATH=/app/data/slot_locks.db
+      - BITCOIN_RPC_URL=http://bitcoin-regtest:18443
+      - BITCOIN_RPC_USER=user
+      - BITCOIN_RPC_PASS=password
+      - BITCOIN_CONFIRMATION_THRESHOLD=6
+      - BITCOIN_REVERT_THRESHOLD=18
+      - RUST_LOG=debug
+    ports:
+      - "50051:50051"
+    networks:
+      - sova_network
+    volumes:
+      - sentinel-data:/app/data
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
+      sova-reth:
+        condition: service_healthy
+  
+  network-enclave:
+    build:
+      context: ./network-enclave
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=debug
+      - ENCLAVE_SEED=${ENCLAVE_SEED}
+    ports:
+      - "5555:5555"
+    command: >
+      network-enclave
+      --host 0.0.0.0
+      --port 5555
+      --seed ${ENCLAVE_SEED}
+    networks:
+      - sova_network
+
+  network-indexer:
+    build:
+      context: ./utxo-tracing
+      dockerfile: ./indexer/Dockerfile
+    environment:
+      - RUST_LOG=info
+      - NETWORK=regtest
+      - RPC_HOST=bitcoin-regtest
+      - RPC_PORT=18443
+      - RPC_USER=user
+      - RPC_PASSWORD=password
+      - SOCKET_PATH=/tmp/network-utxos.sock
+      - START_HEIGHT=${INDEXER_START_BLOCK:-0}
+      - POLLING_RATE=${INDEXER_POLLING_RATE:-500}
+      - MAX_BLOCKS_PER_BATCH=${INDEXER_MAX_BLOCKS:-200}
+    networks:
+      - sova_network
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
+      network-utxos:
+        condition: service_started
+    volumes:
+      - socket:/tmp
+
+  network-utxos:
+    build:
+      context: ./utxo-tracing
+      dockerfile: ./storage/Dockerfile
+    environment:
+      - RUST_LOG=info
+      - HOST=0.0.0.0
+      - PORT=5557
+      - LOG_LEVEL=info
+      - DATASOURCE=sqlite
+      - SOCKET_PATH=/tmp/network-utxos.sock
+    ports:
+      - "5557:5557"
+    networks:
+      - sova_network
+    volumes:
+      - utxo-data:/data
+      - socket:/tmp
+
+  testnet-faucet:
+    build:
+      context: ./testnet-faucet
+      dockerfile: Dockerfile
+    environment:
+      - RUST_LOG=info
+      - FAUCET_PRIVATE_KEY=${FAUCET_PRIVATE_KEY}
+    ports:
+      - "5556:5556"
+    networks:
+      - sova_network
+    depends_on:
+      sova-reth:
+        condition: service_healthy
+    command: [
+      "--rpc-url", "http://sova-reth:8545",
+      "--private-key", "${FAUCET_PRIVATE_KEY}",
+      "--host", "0.0.0.0"
+    ]
+
+networks:
+  sova_network:
+    driver: bridge
+
+volumes:
+  bitcoin-data:
+  validator-data:
+  sentinel-data:
+  utxo-data:
+  socket:
