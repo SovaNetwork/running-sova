@@ -103,26 +103,6 @@ services:
       - utxo-data:/data
       - socket:/tmp
 
-  testnet-faucet:
-    build:
-      context: ./testnet-faucet
-      dockerfile: Dockerfile
-    environment:
-      - RUST_LOG=info
-      - FAUCET_PRIVATE_KEY=${FAUCET_PRIVATE_KEY}
-    ports:
-      - "5556:5556"
-    networks:
-      - sova_network
-    depends_on:
-      sova-reth:
-        condition: service_healthy
-    command: [
-      "--rpc-url", "http://sova-reth:8545",
-      "--private-key", "${FAUCET_PRIVATE_KEY}",
-      "--host", "0.0.0.0"
-    ]
-
 networks:
   sova_network:
     driver: bridge
