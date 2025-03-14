@@ -1,15 +1,15 @@
 [submodule "sova-reth"]
 	path = sova-reth
-	url = git@github.com:SovaNetwork/sova-reth.git
+	url = https://github.com/SovaNetwork/sova-reth.git
 [submodule "testnet-faucet"]
 	path = testnet-faucet
-	url = git@github.com:SovaNetwork/testnet-faucet.git
+	url = https://github.com/SovaNetwork/testnet-faucet.git
 [submodule "network-enclave"]
 	path = network-enclave
-	url = git@github.com:SovaNetwork/network-enclave.git
+	url = https://github.com/SovaNetwork/network-enclave.git
 [submodule "utxo-tracing"]
 	path = utxo-tracing
-	url = git@github.com:SovaNetwork/utxo-tracing.git
+	url = https://github.com/SovaNetwork/utxo-tracing.git
 [submodule "sova-sentinel"]
 	path = sova-sentinel
-	url = https://github.com/SovaNetwork/sova-sentinel
+	url = https://github.com/SovaNetwork/sova-sentinel.git
