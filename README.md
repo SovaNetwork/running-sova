@@ -1,66 +1,11 @@
-## Foundry
+## running-sova
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A collection of docker-compose files that orchestrate running Sova validator services in various configurations.
 
-Foundry consists of:
+### Dockerfiles
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+1. [./dockerfiles/dev-docker-compose](./dockerfiles/dev-docker-compose)
+    - Used to run a Sova validator locally in --dev mode. This means validator consensus is mocked and there is only one tx per sova block. This uses a regtest bitcoin node to mock bitcoin interactions.
 
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+2. [./dockerfiles/testnet-aux-services-docker-compose](./dockerfiles/testnet-aux-services-docker-compose)
+    - Used to run a centralized version of all Sova validator auxiliary services. This bundle of services can be used by a multinode validator testnet cluster.
