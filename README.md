@@ -2,6 +2,13 @@
 
 A collection of docker-compose files that orchestrate running Sova validator services in various configurations.
 
+### Sync Git Submodules
+
+```
+git submodule sync
+git submodule update --init --recursive
+```
+
 ### Dockerfiles
 
 1. [./dockerfiles/dev-docker-compose](./dockerfiles/dev-docker-compose.yml)
@@ -29,3 +36,5 @@ docker-compose -p sova-testnet-aux-services down -v --rmi all
 ### Notes
 
 Be sure to create a `.env` file in the dockerfiles folder using the `env.example` file.
+
+Ensure docker is up to date.
