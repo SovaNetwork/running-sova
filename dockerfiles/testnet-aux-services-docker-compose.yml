@@ -44,7 +44,7 @@ services:
 
   network-enclave:
     build:
-      context: ./network-enclave
+      context: ../network-enclave
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=debug
@@ -61,7 +61,7 @@ services:
 
   network-indexer:
     build:
-      context: ./utxo-tracing
+      context: ../utxo-tracing
       dockerfile: ./indexer/Dockerfile
     environment:
       - RUST_LOG=info
@@ -86,7 +86,7 @@ services:
 
   network-utxos:
     build:
-      context: ./utxo-tracing
+      context: ../utxo-tracing
       dockerfile: ./storage/Dockerfile
     environment:
       - RUST_LOG=info

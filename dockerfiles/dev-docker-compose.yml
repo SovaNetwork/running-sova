@@ -44,7 +44,7 @@ services:
 
   sova-reth:
     build:
-      context: ./sova-reth
+      context: ../sova-reth
       dockerfile: Dockerfile
     environment:
       - BTC_NETWORK=regtest
@@ -80,7 +80,7 @@ services:
 
   sentinel-server:
     build:
-      context: ./sova-sentinel
+      context: ../sova-sentinel
       dockerfile: Dockerfile
     environment:
       - SOVA_SENTINEL_HOST=0.0.0.0
@@ -106,7 +106,7 @@ services:
   
   network-enclave:
     build:
-      context: ./network-enclave
+      context: ../network-enclave
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=debug
@@ -123,7 +123,7 @@ services:
 
   network-indexer:
     build:
-      context: ./utxo-tracing
+      context: ../utxo-tracing
       dockerfile: ./indexer/Dockerfile
     environment:
       - RUST_LOG=info
@@ -148,7 +148,7 @@ services:
 
   network-utxos:
     build:
-      context: ./utxo-tracing
+      context: ../utxo-tracing
       dockerfile: ./storage/Dockerfile
     environment:
       - RUST_LOG=info
@@ -167,7 +167,7 @@ services:
 
   testnet-faucet:
     build:
-      context: ./testnet-faucet
+      context: ../testnet-faucet
       dockerfile: Dockerfile
     environment:
       - RUST_LOG=info
