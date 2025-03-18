@@ -19,7 +19,7 @@ git submodule update --init --recursive
 docker-compose -f dockerfiles/dev-docker-compose.yml -p sova-devnet up --build -d
 
 # remove all containers and volumes with:
-docker-compose -p sova-devnet down -v --rmi all
+docker-compose -f dockerfiles/dev-docker-compose.yml -p sova-devnet down -v --rmi all
 ```
 
 2. [./dockerfiles/testnet-aux-services-docker-compose](./dockerfiles/testnet-aux-services-docker-compose.yml)
@@ -30,7 +30,7 @@ docker-compose -p sova-devnet down -v --rmi all
 docker-compose -f dockerfiles/testnet-aux-services-docker-compose.yml -p sova-testnet-aux-services up --build -d
 
 # remove all containers and volumes with:
-docker-compose -p sova-testnet-aux-services down -v --rmi all
+docker-compose -f dockerfiles/testnet-aux-services-docker-compose.yml -p sova-testnet-aux-services down -v --rmi all
 ```
 
 ### Notes

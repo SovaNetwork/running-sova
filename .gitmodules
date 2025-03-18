@@ -1,6 +1,3 @@
-[submodule "sova-reth"]
-	path = sova-reth
-	url = https://github.com/SovaNetwork/sova-reth.git
 [submodule "testnet-faucet"]
 	path = testnet-faucet
 	url = https://github.com/SovaNetwork/testnet-faucet.git

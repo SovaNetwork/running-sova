@@ -43,20 +43,28 @@ services:
       retries: 5
 
   sova-reth:
-    build:
-      context: ../sova-reth
-      dockerfile: Dockerfile
-    environment:
-      - BTC_NETWORK=regtest
-      - BTC_RPC_URL=http://bitcoin-regtest
-      - BTC_RPC_USER=user
-      - BTC_RPC_PASSWORD=password
-      - NETWORK_SIGNING_URL=http://network-enclave:5555
-      - NETWORK_UTXO_URL=http://network-utxos:5557
-      - BTC_TX_QUEUE_URL=http://btc-broadcast-service:5558
-      - SENTINEL_URL=http://sentinel-server:50051
-      - CHAIN=dev
-      - TRACE_LEVEL=info
+    image: ghcr.io/sovanetwork/sova-reth:latest
+    command: >
+      node
+      --btc-network regtest
+      --network-url http://bitcoin-regtest
+      --btc-rpc-username user
+      --btc-rpc-password password
+      --network-signing-url http://network-enclave:5555
+      --network-utxo-url http://network-utxos:5557
+      --sentinel-url http://sentinel-server:50051
+      --dev
+      --datadir /var/lib/sova
+      --http
+      --http.addr 0.0.0.0
+      --http.port 8545
+      --ws
+      --ws.addr 0.0.0.0
+      --ws.port 8546
+      --http.api all
+      --authrpc.addr 0.0.0.0
+      --authrpc.port 8551
+      --log.stdout.filter info
     ports:
       - "8545:8545"
     networks:
@@ -101,9 +109,7 @@ services:
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
-      sova-reth:
-        condition: service_healthy
-  
+    
   network-enclave:
     build:
       context: ../network-enclave
@@ -178,7 +184,7 @@ services:
       - sova_network
     depends_on:
       sova-reth:
-        condition: service_healthy
+        condition: service_started
     command: [
       "--rpc-url", "http://sova-reth:8545",
       "--private-key", "${FAUCET_PRIVATE_KEY}",
