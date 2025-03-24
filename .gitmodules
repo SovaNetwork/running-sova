@@ -7,6 +7,3 @@
 [submodule "utxo-tracing"]
 	path = utxo-tracing
 	url = https://github.com/SovaNetwork/utxo-tracing.git
-[submodule "sova-sentinel"]
-	path = sova-sentinel
-	url = https://github.com/SovaNetwork/sova-sentinel.git
