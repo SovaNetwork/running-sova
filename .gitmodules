@@ -1,6 +1,3 @@
-[submodule "testnet-faucet"]
-	path = testnet-faucet
-	url = https://github.com/SovaNetwork/testnet-faucet.git
 [submodule "network-enclave"]
 	path = network-enclave
 	url = https://github.com/SovaNetwork/network-enclave.git
