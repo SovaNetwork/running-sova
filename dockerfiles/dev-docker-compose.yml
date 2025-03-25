@@ -43,7 +43,7 @@ services:
       retries: 5
 
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:latest
+    image: ghcr.io/sovanetwork/sova-reth:v0.0.2
     command: >
       node
       --btc-network regtest
@@ -74,6 +74,7 @@ services:
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
+    profiles: [core]
     healthcheck:
       test: [
         "CMD",
@@ -87,7 +88,7 @@ services:
       retries: 5
 
   sentinel-server:
-    image: ghcr.io/sovanetwork/sova-sentinel:latest
+    image: ghcr.io/sovanetwork/sova-sentinel:v0.1.0
     environment:
       - SOVA_SENTINEL_HOST=0.0.0.0
       - SOVA_SENTINEL_PORT=50051
@@ -107,6 +108,7 @@ services:
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
+    profiles: [core]
     
   network-enclave:
     build:
@@ -168,26 +170,6 @@ services:
     volumes:
       - utxo-data:/data
       - socket:/tmp
-
-  testnet-faucet:
-    build:
-      context: ../testnet-faucet
-      dockerfile: Dockerfile
-    environment:
-      - RUST_LOG=info
-      - FAUCET_PRIVATE_KEY=${FAUCET_PRIVATE_KEY}
-    ports:
-      - "5556:5556"
-    networks:
-      - sova_network
-    depends_on:
-      sova-reth:
-        condition: service_started
-    command: [
-      "--rpc-url", "http://sova-reth:8545",
-      "--private-key", "${FAUCET_PRIVATE_KEY}",
-      "--host", "0.0.0.0"
-    ]
 
 networks:
   sova_network:
