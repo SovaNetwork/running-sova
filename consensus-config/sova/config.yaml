@@ -1,7 +1,7 @@
 # Extends the mainnet preset
 PRESET_BASE: "mainnet"
 # Network name
-CONFIG_NAME: "hyperstate"
+CONFIG_NAME: "Sova"
 
 # Transition
 # ---------------------------------------------------------------
@@ -95,7 +95,7 @@ REORG_MAX_EPOCHS_SINCE_FINALIZATION: 2
 
 # Deposit contract
 # ---------------------------------------------------------------
-# Hyperstate PoS Mainnet
+# Sova PoS Mainnet
 DEPOSIT_CHAIN_ID: 120893
 DEPOSIT_NETWORK_ID: 120893
 DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242

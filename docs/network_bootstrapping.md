@@ -1,9 +1,9 @@
-# A Guide to Bootstrapping the Hyperstate Network
+# A Guide to Bootstrapping the Sova Network
 
-This is a comprehensive guide to launching Hyperstate, a proof-of-stake (PoS) EVM network, without going through a 'merge' ceremony. Meaning all PoS functionality will be available at the genesis block. The three main service which make up a PoS network are the execution client, beacon node, and validator client.
+This is a comprehensive guide to launching Sova, a proof-of-stake (PoS) EVM network, without going through a 'merge' ceremony. Meaning all PoS functionality will be available at the genesis block. The three main service which make up a PoS network are the execution client, beacon node, and validator client.
 
 - Execution Client: A service which enforces the rules of the ethereum virtual machine (EVM).
-    - [Hyperstate Reth](https://github.com/OnCorsa/corsa-reth)
+    - [Sova Reth](https://github.com/OnCorsa/corsa-reth)
 - Beacon Node:  The primary component which connects to the PoS network, it is responsible for managing peer connections and block propagation.
     - [Lighthouse](https://github.com/sigp/lighthouse)
 - Validation Client: When connected to a beacon node, performs the duties of a staked validator (e.g., proposing blocks and attestations).
@@ -52,7 +52,7 @@ Notes:
 
 The SSZ-encoded genesis state for the beacon chain. This encoding contains the initial validator set, the genesis time, fork version, genesis validators root, and other state roots.
 
-This file for Hyperstate was generated using [eth2-testnet-genesis](https://github.com/protolambda/eth2-testnet-genesis). This utility is used for generating an Eth2 genesis state, eliminating the need to make deposits for all validators. When using this tool, it is important to use the validator mnemonic that you generate in [Generate Validator Keys](#generate-validator-keys) section. This will also prompt you for the number of validators you wish that key to be associated with
+This file for Sova was generated using [eth2-testnet-genesis](https://github.com/protolambda/eth2-testnet-genesis). This utility is used for generating an Eth2 genesis state, eliminating the need to make deposits for all validators. When using this tool, it is important to use the validator mnemonic that you generate in [Generate Validator Keys](#generate-validator-keys) section. This will also prompt you for the number of validators you wish that key to be associated with
 
 [genesis.ssz](/consensus-config/hyperstate/genesis.ssz): `./consensus-config/hyperstate/genesis.ssz`
 
@@ -218,7 +218,7 @@ lighthouse account validator import \
     --directory ~/staking-deposit-cli/validator_keys 
 ```
 
-2. View imported keys for Hyperstate
+2. View imported keys for Sova
 ```bash
 lighthouse account validator list \
     --testnet-dir ~/running-corsa/consensus-config/hyperstate
