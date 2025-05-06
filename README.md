@@ -1,6 +1,6 @@
 ## running-sova
 
-Orchestrate running Sova validator services in various configurations.
+Orchestrate running a Sova Validator with user specific BTC configurations.
 
 ### Sync Git Submodules
 
