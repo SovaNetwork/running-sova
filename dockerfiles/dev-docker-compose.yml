@@ -43,9 +43,10 @@ services:
       retries: 5
 
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:v0.0.2
+    image: ghcr.io/sovanetwork/sova-reth:v0.0.3
     command: >
       node
+      --chain dev
       --btc-network regtest
       --network-url http://bitcoin-regtest
       --btc-rpc-username user
@@ -53,8 +54,8 @@ services:
       --network-signing-url http://network-enclave:5555
       --network-utxo-url http://network-utxos:5557
       --sentinel-url http://sentinel-server:50051
-      --dev
-      --datadir /var/lib/sova
+      --sentinel-confirmation-threshold 6
+      --sequencer-mode
       --http
       --http.addr 0.0.0.0
       --http.port 8545
@@ -64,7 +65,9 @@ services:
       --http.api all
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
+      --datadir /var/lib/sova
       --log.stdout.filter debug
+      --dev
     ports:
       - "8545:8545"
     networks:
@@ -74,6 +77,8 @@ services:
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
+      sentinel-server:
+        condition: service_started
     profiles: [core]
     healthcheck:
       test: [
@@ -88,7 +93,7 @@ services:
       retries: 5
 
   sentinel-server:
-    image: ghcr.io/sovanetwork/sova-sentinel:v0.1.0
+    image: ghcr.io/sovanetwork/sova-sentinel:v0.1.1
     environment:
       - SOVA_SENTINEL_HOST=0.0.0.0
       - SOVA_SENTINEL_PORT=50051
