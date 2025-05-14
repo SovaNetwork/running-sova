@@ -5,3 +5,5 @@ logs.env
 logs/
 
 .env
+
+**/jwt.txt
