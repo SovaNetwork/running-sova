@@ -13,7 +13,7 @@ services:
     image: ghcr.io/sovanetwork/sova-reth:latest
     command: >
       node
-      --chain /config/genesis.json
+      --chain /config/testnet/genesis.json
       --btc-network regtest
       --network-url http://bitcoin-regtest
       --btc-rpc-username user
@@ -32,7 +32,7 @@ services:
       --http.api all
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
-      --authrpc.jwtsecret=/config/jwt.txt
+      --authrpc.jwtsecret=/config/testnet/jwt.txt
       --datadir /var/lib/sova
       --log.stdout.filter debug
     ports:
@@ -42,7 +42,7 @@ services:
     networks:
       - sova_network
     volumes:
-      - validator-data:/var/lib/sova
+      - sequencer-data:/var/lib/sova
       - ../config:/config
     depends_on:
       bitcoin-regtest:
@@ -194,11 +194,11 @@ services:
     command: >
       op-node
       --l2=http://sova-reth:8551
-      --l2.jwt-secret=/config/jwt.txt
+      --l2.jwt-secret=/config/testnet/jwt.txt
       --sequencer.enabled
       --sequencer.l1-confs=5
       --verifier.l1-confs=4
-      --rollup.config=/config/rollup.json
+      --rollup.config=/config/testnet/rollup.json
       --rpc.addr=0.0.0.0
       --p2p.disable
       --rpc.enable-admin
@@ -237,8 +237,6 @@ services:
     depends_on:
       - sova-reth
       - op-node
-    volumes:
-      - ../config:/config
     ports:
       - "8548:8548"
     networks:
@@ -260,8 +258,6 @@ services:
     depends_on:
       - sova-reth
       - op-node
-    volumes:
-      - ../config:/config
     ports:
       - "8560:8560"
     networks:
@@ -274,7 +270,7 @@ networks:
 
 volumes:
   bitcoin-data:
-  validator-data:
+  sequencer-data:
   sentinel-data:
   utxo-data:
   socket:
