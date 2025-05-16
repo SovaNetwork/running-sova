@@ -4,9 +4,9 @@
 # The `core` profile is used to run the core Sova components,
 # while the `op-stack` profile is used to run the OP stack components.
 # Use them together to run the entire Sova OP testnet sequencer.
-#
-# In a production environment, this should not be used. It is intended to be used
-# for testing and development purposes only.
+
+#! In a production environment, this should not be used. It is intended to be used
+#! for testing and development purposes only.
 services:
   # Core Sova components
   sova-reth:
@@ -92,7 +92,7 @@ services:
     ports:
       - "18444:18444"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../config/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - sova_network
     depends_on:
