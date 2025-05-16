@@ -57,7 +57,7 @@ Services in the docker compose files use a JWT token to safely communicate with 
 
 ## Important Details
 
-- Be sure to create a `.env` file in the dockerfiles folder using the `env.example` file.
+- Be sure to create a `.env` by copying the `env.example` file.
 - Ensure docker is up to date.
 - Create a new jwt token `openssl rand -hex 32 > config/<network-name>/jwt.txt`.
 - Releases of the op-deployer correlate to specific op-contracts release. Be sure not to mix older op-contracts releases with op-deployer releases or vice versa. This will cause wierd runtime errors. After creating a new genesis.json and rollup.json always record the release versions of the op-deployer you used as well as the forked version of op-contracts that was used. 
