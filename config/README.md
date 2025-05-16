@@ -1,4 +1,4 @@
-# Using op-deployer to bootstrap chain artifacts
+# Using op-deployer To Generate Sova Chain Artifacts
 
 This is a "how to" document on how Sova uses the op-deployer to generate its OP chain artifacts
 
