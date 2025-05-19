@@ -129,7 +129,7 @@ services:
     image: ghcr.io/sovanetwork/network-enclave:v0.0.2
     environment:
       - RUST_LOG=debug
-      - BIP32_SEED=${ENCLAVE_SEED}
+      - BIP32_SEED=${BIP32_SEED}
       - API_KEY=${SHARED_API_KEY:-}
     ports:
       - "5555:5555"

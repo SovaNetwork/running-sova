@@ -1,6 +1,3 @@
-[submodule "network-enclave"]
-	path = network-enclave
-	url = https://github.com/SovaNetwork/network-enclave.git
 [submodule "utxo-tracing"]
 	path = utxo-tracing
 	url = https://github.com/SovaNetwork/utxo-tracing.git
