@@ -10,6 +10,8 @@ services:
   # Core Sova components
   sova-reth:
     image: ghcr.io/sovanetwork/sova-reth:v0.0.4
+    environment:
+      - SIGNING_SERVICE_API_KEY=${SHARED_API_KEY:-}
     command: >
       node
       --chain dev
