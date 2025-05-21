@@ -1,8 +1,10 @@
 # running-sova
 
-This is a collection of docker and config files used to orchestrate running a Sova dev node or standing up a fresh Sova network.
+This is a collection of docker-config files, scripts, and network config artifacts that can be used to orchestrate running a Sova dev node or for orchestrating the deployment of a genesis chain.
 
-The `config/` folder contains Sova genesis and rollup JSON files, while the `/dockerfiles` folder contains the docker-compose files used to spin up Sova nodes.
+The [config/](/config/) folder contains Sova genesis and rollup JSON files, while the `/dockerfiles` folder contains the docker-compose files used to spin up Sova node services. These services includes the optimsim rollup stack, bitcoin core, and various other sova network services.
+
+The [scripts/](/scripts/) folder servces mainly as a place for network specific testing flows which prove out various aspects of the double-spend protections built into the network. These scripts also serve as a boilerplate to create other scripts which interact with both a bitcoin node to create network "context" and interact with the smart contract deployed on the network itself.
 
 ## Installation
 
