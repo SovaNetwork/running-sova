@@ -1,3 +1,0 @@
-[submodule "utxo-tracing"]
-	path = utxo-tracing
-	url = https://github.com/SovaNetwork/utxo-tracing.git

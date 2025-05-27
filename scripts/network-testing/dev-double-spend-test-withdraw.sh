@@ -43,9 +43,9 @@ BTC_NETWORK="regtest"
 
 # UTXO Indexer Configuration
 # Default values if not provided in environment
-INDEXER_HOST="localhost"
-INDEXER_PORT="5557"
-INDEXER_URL="http://${INDEXER_HOST}:${INDEXER_PORT}"
+INDEXER_DB_HOST="localhost"
+INDEXER_DB_PORT="5557"
+INDEXER_DB_URL="http://${INDEXER_DB_HOST}:${INDEXER_DB_PORT}"
 
 # Function to convert BTC to smallest unit (satoshis)
 btc_to_sats() {
@@ -152,13 +152,13 @@ WITHDRAWAL_FEE=$(btc_to_sats 0.01)
 
 echo "Waiting for UTXO indexer to catch up..."
 while true; do
-    RESPONSE=$(curl -s "${INDEXER_URL}/latest-block")
+    RESPONSE=$(curl -s "${INDEXER_DB_URL}/latest-block")
     LATEST_BLOCK=$(echo $RESPONSE | jq -r '.latest_block')
     echo "Current BTC block height: $BTC_BLOCK_HEIGHT"
     echo "Latest indexed block: $LATEST_BLOCK"
     
     if [ "$LATEST_BLOCK" -ge "$BTC_BLOCK_HEIGHT" ]; then
-        UTXOS=$(curl -s "${INDEXER_URL}/spendable-utxos/block/$BTC_BLOCK_HEIGHT/address/$UBTC_BITCOIN_RECEIVE_ADDRESS")
+        UTXOS=$(curl -s "${INDEXER_DB_URL}/spendable-utxos/block/$BTC_BLOCK_HEIGHT/address/$UBTC_BITCOIN_RECEIVE_ADDRESS")
         
         # Check if we got an error response
         if ! echo "$UTXOS" | jq -e '.error' > /dev/null; then

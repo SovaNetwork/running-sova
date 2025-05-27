@@ -1,42 +1,33 @@
 # running-sova
 
-This is a collection of docker-config files, scripts, and network config artifacts that can be used to orchestrate running a Sova dev node or for orchestrating the deployment of a genesis chain.
+This is a collection of docker-config files, scripts, and network config artifacts that can be used to orchestrate running a Sova dev node or for the deployment of a fresh chain.
 
 The [config/](/config/) folder contains Sova genesis and rollup JSON files, while the `/dockerfiles` folder contains the docker-compose files used to spin up Sova node services. These services includes the optimsim rollup stack, bitcoin core, and various other sova network services.
 
 The [scripts/](/scripts/) folder servces mainly as a place for network specific testing flows which prove out various aspects of the double-spend protections built into the network. These scripts also serve as a boilerplate to create other scripts which interact with both a bitcoin node to create network "context" and interact with the smart contract deployed on the network itself.
 
-## Installation
-
-```bash
-# Sync Git Submodules
-
-git submodule sync
-git submodule update --init --recursive
-```
-
 ## Running
 
 There are two docker compose file variants, 'dev' and 'testnet'. The primary difference is in 'dev' consensus is mocked at the execution client, where as the 'testnet' implementation use OP rollup consensus.
 
-### [dockerfiles/dev-sova-node](./dockerfiles/dev-sova-node.yml)
+### dev - [dockerfiles/dev-sova-node](./dockerfiles/dev-sova-node.yml)
 - Used to run a Sova validator locally in --dev mode. This means validator consensus is mocked and there is only one tx per sova block. This uses a regtest bitcoin node to mock bitcoin interactions.
 - When the 'core' profile is specified, sova-reth and sova-sentinel run alongside the Sova auxiliary services.
 
 ```bash
-# run single node devnet locally
+# run single node devnet sequencer locally
 docker-compose -f dockerfiles/dev-sova-node.yml -p sova-devnet --profile core --env-file ./.env up --build -d
 
 # remove all containers and volumes with:
 docker-compose -f dockerfiles/dev-sova-node.yml -p sova-devnet --profile core --env-file ./.env down -v --rmi all
 ```
 
-### [dockerfiles/sova-op-sequencer-node](./dockerfiles/sova-op-sequencer-node.yml)
+### testnet - [dockerfiles/sova-op-sequencer-node](./dockerfiles/sova-op-sequencer-node.yml)
 - Used to run a full Sova OP Sequencer node.
 - When the 'core' and 'op-stack' profiles are specified sova-reth, sova-sentinel, op-node, op-batcher, op-proposer all run alongside the Sova auxiliary services.
 
 ```bash
-# run all auxiliary services used by validators
+# run Sova OP sequencer
 docker-compose -f dockerfiles/sova-op-sequencer-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env up --build -d
 
 # remove all containers and volumes with:
@@ -44,7 +35,7 @@ docker-compose -f dockerfiles/sova-op-sequencer-node.yml -p sova-op-testnet --pr
 ```
 
 ```bash
-# run all auxiliary services used by validators
+# run all auxiliary services used by sequencer
 docker-compose -f dockerfiles/sova-op-sequencer-node.yml -p sova-aux-services --env-file ./.env up --build -d
 
 # remove all containers and volumes with:
