@@ -19,7 +19,7 @@ services:
       --network-url http://bitcoin-regtest
       --btc-rpc-username user
       --btc-rpc-password password
-      --network-utxos-url http://network-utxos:3031
+      --network-utxos-url http://network-indexer:3031
       --sentinel-url http://sentinel-server:50051
       --sentinel-confirmation-threshold 6
       --sequencer-mode
@@ -33,7 +33,7 @@ services:
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
       --datadir /var/lib/sova
-      --log.stdout.filter debug
+      --log.stdout.filter ${RUST_LOG:-info}
       --dev
     ports:
       - "8545:8545"
@@ -73,7 +73,7 @@ services:
       - BITCOIN_CONFIRMATION_THRESHOLD=6
       - BITCOIN_REVERT_THRESHOLD=18
       - BITCOIN_RPC_MAX_RETRIES=5
-      - RUST_LOG=debug
+      - RUST_LOG=${RUST_LOG:-info}
     ports:
       - "50051:50051"
     networks:
@@ -129,7 +129,7 @@ services:
   network-enclave:
     image: ghcr.io/sovanetwork/network-enclave:v0.0.4
     environment:
-      - RUST_LOG=debug
+      - LOG_LEVEL=${RUST_LOG:-info}
       - BIP32_SEED=${BIP32_SEED}
       - ENCLAVE_API_KEY=${ENCLAVE_SHARED_API_KEY:-}
     ports:
