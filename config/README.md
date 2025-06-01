@@ -1,10 +1,10 @@
 # Using op-deployer To Generate Sova Chain Artifacts
 
-This is a "how to" document on how Sova uses the op-deployer to generate its OP chain artifacts
+This is a "how to" document on how Sova uses the op-deployer tool to generate OP chain artifacts.
 
 **The genesis.json and rollup.json file in the `testnet` folder were created using the instructions below.**
 
-To see the changes made to  Solidity deployment scripts used by op-deployer see the forked [SovaNetwork/optimism](https://github.com/SovaNetwork/optimism) repo on branch [op-deployer-0.3.0](https://github.com/SovaNetwork/optimism/tree/op-deployer-0.3.0). You can view the diff here: [https://github.com/SovaNetwork/optimism/compare/ef7a933ca7f3d27ac40406f87fea25e0c3ba2016...9eec8e4e367ef2b6dac1f8deb9f19ec5006bbd4d](https://github.com/SovaNetwork/optimism/compare/ef7a933ca7f3d27ac40406f87fea25e0c3ba2016...9eec8e4e367ef2b6dac1f8deb9f19ec5006bbd4d)
+To see the changes made to the deployment scripts used by op-deployer see the forked [SovaNetwork/optimism](https://github.com/SovaNetwork/optimism) repo on branch [op-deployer-0.3.0](https://github.com/SovaNetwork/optimism/tree/op-deployer-0.3.0). You can view the diff here: [https://github.com/SovaNetwork/optimism/compare/ef7a933ca7f3d27ac40406f87fea25e0c3ba2016...3377526e5134beba574b5cb2cef5d5667e8167d5](https://github.com/SovaNetwork/optimism/compare/ef7a933ca7f3d27ac40406f87fea25e0c3ba2016...3377526e5134beba574b5cb2cef5d5667e8167d5)
 
 ### Step 1
 Download op-deployer from Optimism [releases page](https://github.com/ethereum-optimism/optimism/releases). It is very important to be cognizant of the release version you choose here as it directly relates to the op-contracts release version that is supported. When upgrading to new releases of op-deployer, look at the pre-populated contracts field in the intent.toml and use that as the base of the fork to make Sova predeploy changes on top of.
@@ -17,7 +17,7 @@ Download op-deployer from Optimism [releases page](https://github.com/ethereum-o
 ➜  ~ op-deployer --version
 op-deployer version 0.3.0-rc.5-b725dd78-2025-03-15T15:39:09Z
 ```
-> NOTE: For mac os users: When you run op-deployer for the first time your system settings will block it. Go to settings -> Privacy & Security and click allow on the blocked program execution.
+> NOTE: For macOS users: When you run op-deployer for the first time your system settings will block it. Go to settings -> Privacy & Security and click allow on the blocked program execution.
 
 ### Step 2
 Initialize `intent.toml` and `state.json` files, that will be used to create chain artifacts.
