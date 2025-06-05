@@ -23,7 +23,7 @@ set -e
 WALLET_1="user"
 WALLET_2="miner"
 UBTC_CONTRACT_ADDRESS="0x2100000000000000000000000000000000000020"  # native wrapped BTC predeploy address
-UBTC_BITCOIN_RECEIVE_ADDRESS="bcrt1q5443nh36k845xcecc53wttj4gpkg5jguvr4rev"  # deterministic address based on the network signing wallet's bip32 derivation path
+UBTC_BITCOIN_RECEIVE_ADDRESS="bcrt1qy8ke4mwdw38qlvmkllvrtxmdsp59tklkkukuhx"  # deterministic address based on the network signing wallet's bip32 derivation path
 ETH_RPC_URL="http://localhost:8545"
 ETH_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 ETH_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
@@ -69,7 +69,7 @@ cast send \
     --gas-limit 250000 \
     --chain-id "$CHAIN_ID" \
     "$UBTC_CONTRACT_ADDRESS" \
-    "depositBTC(uint256,bytes)" \
+    "depositBTC(uint64,bytes)" \
     "$AMOUNT_SATS" \
     "0x$TX1_HEX"
 
