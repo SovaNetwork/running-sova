@@ -88,17 +88,6 @@ services:
     profiles: [core]
   
   # Supporting Sova components
-  nginx-proxy:
-    image: nginx:alpine
-    ports:
-      - "18444:18444"
-    volumes:
-      - ../config/nginx.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - sova_network
-    depends_on:
-      - bitcoin-regtest
-  
   bitcoin-regtest:
     image: ruimarinho/bitcoin-core@sha256:79dd32455cf8c268c63e5d0114cc9882a8857e942b1d17a6b8ec40a6d44e3981 # ruimarinho/bitcoin-core:24
     command:

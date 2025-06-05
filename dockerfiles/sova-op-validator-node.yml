@@ -1,0 +1,146 @@
+services:
+  # Core Sova components
+  # TODO(powvt): remove network-utxos-url from validator sova-reth config
+  sova-reth:
+    image: ghcr.io/sovanetwork/sova-reth:v0.0.5
+    command: >
+      node
+      --chain /config/testnet/genesis.json
+      --btc-network ${NETWORK:-regtest}
+      --network-url http://bitcoin-regtest
+      --btc-rpc-username user
+      --btc-rpc-password password
+      --network-utxos-url http://network-indexer:3031 
+      --sentinel-url http://sentinel-server:50051
+      --sentinel-confirmation-threshold 6
+      --http
+      --http.addr 0.0.0.0
+      --http.port 8545
+      --ws
+      --ws.addr 0.0.0.0
+      --ws.port 8546
+      --http.api all
+      --authrpc.addr 0.0.0.0
+      --authrpc.port 8551
+      --authrpc.jwtsecret=/config/testnet/jwt.txt
+      --datadir /var/lib/sova
+      --log.stdout.filter ${RUST_LOG:-info}
+    ports:
+      - "8545:8545" # HTTP JSON-RPC for validator (read-only usage)
+      # 8546 (WS) and 8551 (Engine API) are not exposed
+    networks:
+      - sova_network
+    volumes:
+      - sequencer-data:/var/lib/sova
+      - ../config:/config
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
+      sentinel-server:
+        condition: service_started
+    profiles: [core]
+    healthcheck:
+      test: [
+        "CMD",
+        "curl",
+        "-H", "Content-Type: application/json",
+        "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
+        "http://localhost:8545"
+      ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  sentinel-server:
+    image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
+    environment:
+      - SOVA_SENTINEL_HOST=0.0.0.0
+      - SOVA_SENTINEL_PORT=50051
+      - SOVA_SENTINEL_DB_PATH=/app/data/slot_locks.db
+      - BITCOIN_RPC_URL=http://bitcoin-regtest:18443
+      - BITCOIN_RPC_USER=user
+      - BITCOIN_RPC_PASS=password
+      - BITCOIN_CONFIRMATION_THRESHOLD=6
+      - BITCOIN_REVERT_THRESHOLD=18
+      - BITCOIN_RPC_MAX_RETRIES=5
+      - RUST_LOG=${RUST_LOG:-info}
+    ports:
+      - "50051:50051"
+    networks:
+      - sova_network
+    volumes:
+      - sentinel-data:/app/data
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
+    profiles: [core]
+  
+  # Supporting Sova components
+  bitcoin-regtest:
+    image: ruimarinho/bitcoin-core@sha256:79dd32455cf8c268c63e5d0114cc9882a8857e942b1d17a6b8ec40a6d44e3981 # ruimarinho/bitcoin-core:24
+    command:
+      -regtest=1
+      -server=1
+      -txindex=1
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcuser=user
+      -rpcpassword=password
+    ports:
+      - "18443:18443"
+    networks:
+      - sova_network
+    volumes:
+      - bitcoin-data:/home/bitcoin/.bitcoin
+    healthcheck:
+      test: [
+        "CMD",
+        "bitcoin-cli",
+        "-regtest",
+        "-rpcuser=user",
+        "-rpcpassword=password",
+        "getblockchaininfo"
+      ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # OP Stack components
+  op-node:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.2
+    command: >
+      op-node
+      --l2=http://sova-reth:8551
+      --l2.jwt-secret=/config/testnet/jwt.txt
+      --sequencer.enabled
+      --sequencer.l1-confs=5
+      --verifier.l1-confs=4
+      --rollup.config=/config/testnet/rollup.json
+      --rpc.addr=0.0.0.0
+      --p2p.disable
+      --rpc.enable-admin
+      --p2p.sequencer.key=${SEQUENCER_PRIVATE_KEY}
+      --l1=${ALCHEMY_L1_RPC_URL}
+      --l1.rpckind=alchemy
+      --l1.beacon=${L1_BEACON_URL}
+      --rpc.port=9545
+    depends_on:
+      - sova-reth
+    volumes:
+      - ../config:/config
+    ports:
+      - "9545:9545"
+    networks:
+      - sova_network
+    profiles: [op-stack]
+
+networks:
+  sova_network:
+    driver: bridge
+
+volumes:
+  bitcoin-data:
+  sequencer-data:
+  sentinel-data:
+  utxo-data:
+  socket:
