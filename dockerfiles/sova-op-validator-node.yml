@@ -108,22 +108,20 @@ services:
   # OP Stack components
   op-node:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.2
+    # P2P disabled -> single sequencer environment
     command: >
       op-node
       --l2=http://sova-reth:8551
       --l2.jwt-secret=/config/testnet/jwt.txt
-      --sequencer.enabled
-      --sequencer.l1-confs=5
       --verifier.l1-confs=4
       --rollup.config=/config/testnet/rollup.json
       --rpc.addr=0.0.0.0
-      --p2p.disable
+      --rpc.port=9545
       --rpc.enable-admin
-      --p2p.sequencer.key=${SEQUENCER_PRIVATE_KEY}
+      --p2p.disable
       --l1=${ALCHEMY_L1_RPC_URL}
       --l1.rpckind=alchemy
       --l1.beacon=${L1_BEACON_URL}
-      --rpc.port=9545
     depends_on:
       - sova-reth
     volumes:

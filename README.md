@@ -23,8 +23,8 @@ docker-compose -f dockerfiles/dev-sova-node.yml -p sova-devnet --profile core --
 ```
 
 ### testnet - [dockerfiles/sova-op-sequencer-node](./dockerfiles/sova-op-sequencer-node.yml)
-- Used to run a full Sova OP Sequencer node.
-- When the 'core' and 'op-stack' profiles are specified sova-reth, sova-sentinel, op-node, op-batcher, op-proposer all run alongside the Sova auxiliary services.
+- Used to run a full Sova OP sequencer node.
+- Run sova-reth and its supporting services in sequencer mode alongside, op-node, op-batcher and op-proposer. The EL and CL here are configured with specific sequencer applicable flags. For a sequencer node, the EL supporting services consist of an archive BTC node, BTC indexer and db, and a sentinel.
 
 ```bash
 # run Sova OP sequencer
@@ -35,11 +35,23 @@ docker-compose -f dockerfiles/sova-op-sequencer-node.yml -p sova-op-testnet --pr
 ```
 
 ```bash
-# run all auxiliary services used by sequencer
+# only run all auxiliary services used by sequencer
 docker-compose -f dockerfiles/sova-op-sequencer-node.yml -p sova-aux-services --env-file ./.env up --build -d
 
 # remove all containers and volumes with:
 docker-compose -f dockerfiles/sova-op-sequencer-node.yml -p sova-aux-services --env-file ./.env down -v --rmi all
+```
+
+### testnet - [dockerfiles/sova-op-validator-node](./dockerfiles/sova-op-validator-node.yml)
+- Used to run a full Sova OP validator node.
+- Run sova-reth and its supporting services in validator mode alongside op-node. The EL and CL here are configured with sequencer specific flags disabled. For a validator node, the EL supporting services consist of only an archive BTC node and a sentinel.
+
+```bash
+# run Sova OP validator
+docker-compose -f dockerfiles/sova-op-validator-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env up --build -d
+
+# remove all containers and volumes with:
+docker-compose -f dockerfiles/sova-op-validator-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env down -v --rmi all
 ```
 
 ## Chain Config
