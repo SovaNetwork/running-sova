@@ -10,20 +10,19 @@
 services:
   # Core Sova components
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:v0.0.5
+    image: ghcr.io/sovanetwork/sova-reth:v0.0.6
     environment:
       - NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
     command: >
       node
       --chain /config/testnet/genesis.json
       --btc-network ${NETWORK:-regtest}
-      --network-url http://bitcoin-regtest
+      --btc-network-url http://bitcoin-regtest
       --btc-rpc-username user
       --btc-rpc-password password
       --network-utxos-url http://network-indexer:3031
       --sentinel-url http://sentinel-server:50051
       --sentinel-confirmation-threshold 6
-      --sequencer-mode
       --http
       --http.addr 0.0.0.0
       --http.port 8545

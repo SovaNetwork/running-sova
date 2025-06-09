@@ -9,20 +9,19 @@
 services:
   # Core Sova components
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:v0.0.5
+    image: ghcr.io/sovanetwork/sova-reth:v0.0.6
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
     command: >
       node
       --chain dev
       --btc-network ${NETWORK:-regtest}
-      --network-url http://bitcoin-regtest
+      --btc-network-url http://bitcoin-regtest
       --btc-rpc-username user
       --btc-rpc-password password
       --network-utxos-url http://network-indexer:3031
       --sentinel-url http://sentinel-server:50051
       --sentinel-confirmation-threshold 6
-      --sequencer-mode
       --http
       --http.addr 0.0.0.0
       --http.port 8545
@@ -86,17 +85,6 @@ services:
     profiles: [core]
   
   # Supporting Sova components
-  nginx-proxy:
-    image: nginx:alpine
-    ports:
-      - "18444:18444"
-    volumes:
-      - ../config/nginx.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - sova_network
-    depends_on:
-      - bitcoin-regtest
-  
   bitcoin-regtest:
     image: ruimarinho/bitcoin-core@sha256:79dd32455cf8c268c63e5d0114cc9882a8857e942b1d17a6b8ec40a6d44e3981 # ruimarinho/bitcoin-core:24
     command:
