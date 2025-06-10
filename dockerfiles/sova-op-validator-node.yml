@@ -6,7 +6,7 @@ services:
     image: ghcr.io/sovanetwork/sova-reth:v0.0.6
     command: >
       node
-      --chain /config/testnet/genesis.json
+      --chain /config/testnet-sepolia/genesis.json
       --btc-network ${NETWORK:-regtest}
       --btc-network-url http://bitcoin-regtest
       --btc-rpc-username user
@@ -24,7 +24,7 @@ services:
       --http.api all
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
-      --authrpc.jwtsecret=/config/testnet/jwt.txt
+      --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
     ports:
@@ -114,9 +114,9 @@ services:
     command: >
       op-node
       --l2=http://sova-reth:8551
-      --l2.jwt-secret=/config/testnet/jwt.txt
+      --l2.jwt-secret=/config/testnet-sepolia/jwt.txt
       --verifier.l1-confs=4
-      --rollup.config=/config/testnet/rollup.json
+      --rollup.config=/config/testnet-sepolia/rollup.json
       --rpc.addr=0.0.0.0
       --rpc.port=9545
       --rpc.enable-admin

@@ -1,0 +1,31 @@
+configType = "standard-overrides"
+l1ChainID = 11155111
+fundDevAccounts = false
+useInterop = true
+l1ContractsLocator = "file:///Users/powvt/optimism/packages/contracts-bedrock/forge-artifacts/"
+l2ContractsLocator = "file:///Users/powvt/optimism/packages/contracts-bedrock/forge-artifacts/"
+
+[superchainRoles]
+  proxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  protocolVersionsOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  guardian = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+
+[[chains]]
+  id = "0x000000000000000000000000000000000000000000000000000000000001d83d"
+  baseFeeVaultRecipient = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  l1FeeVaultRecipient = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  sequencerFeeVaultRecipient = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  eip1559DenominatorCanyon = 250
+  eip1559Denominator = 50
+  eip1559Elasticity = 6
+  operatorFeeScalar = 0
+  operatorFeeConstant = 0
+  [chains.roles]
+    l1ProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    l2ProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    systemConfigOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    unsafeBlockSigner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    batcher = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    proposer = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    challenger = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+

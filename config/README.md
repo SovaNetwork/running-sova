@@ -31,12 +31,18 @@ op-deployer init \
 ```
 - After generating the intent.toml file with this command, modify the contracts path to point to local `/forge-artifacts` folder.
     - Change `tag://op-contracts/v3.0.0-rc.2` to local file path `file:///Users/powvt/optimism/packages/contracts-bedrock/forge-artifacts/`.
-- Update the 0x0 addresses in intent.toml file to final addresses for the chain.
+- Update addresses in intent.toml file to final addresses for the chain genesis.
 - Verify the `fundDevAccounts` flag is what you want.
 - Verify `useInterop` flag is what you want.
 
-
 ### Step 3
+Triple check the local forge-artifacts. Use `forge clean` and `forge build` to re-generate these artifacts. Ensure all owner roles and deployment params are correct.
+
+> NOTE: The `testnet-sepolia` chain was created using the `op-deployer-0.3.0` branch in SovaNetwork/optimism repo at commit hash `4f082df7f6b157d7f10a15bc7ab1c891fa7b6575`.
+
+> **VERY IMPORTANT NOTE:** There is a hack in the SovaNetwork/optimism repo where where you **CANNOT** import SovaNetwork/contracts with `forge install SovaNetwork/contracts@v0.0.9` because the contracts will get compiled differently if they are imported vs in the local `src/L2/sova/` folder. This breaks the `scripts/L2Genesis.s.sol` file because there will be no `<contract-name>.json` to read from there are different files like `<contract-name>.default.json` and `<contract-name>.dispute.json` due to the way the foundry.toml file is configured with different 'profiles'. This is why there is a `src/L2/sova/` and not an `@sova-network/` import in the `L2Genesis.s.sol file` for the Sova contracts.
+
+### Step 4
 Deploy your OP chain.
 
 > NOTE: Prior to running this next command, remember to remove any previous cached deployments with: `rm -rf ~/.cache/op-deployer`
@@ -47,7 +53,7 @@ op-deployer --cache-dir ~/.cache/op-deployer apply \
   --private-key $PRIVATE_KEY
 ```
 
-### Step 4
+### Step 5
 Generate genesis files and chain information
 
 ```
