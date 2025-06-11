@@ -32,6 +32,12 @@ op-deployer init \
 - After generating the intent.toml file with this command, modify the contracts path to point to local `/forge-artifacts` folder.
     - Change `tag://op-contracts/v3.0.0-rc.2` to local file path `file:///Users/powvt/optimism/packages/contracts-bedrock/forge-artifacts/`.
 - Update addresses in intent.toml file to final addresses for the chain genesis.
+  - It is important to note that the addresses used here will also be needed in the docker .env file when running the compose files...
+    - admin
+    - batcher
+    - proposer
+    - sequencer
+    - challenger
 - Verify the `fundDevAccounts` flag is what you want.
 - Verify `useInterop` flag is what you want.
 
