@@ -73,6 +73,10 @@ op-deployer inspect genesis --workdir ~/running-sova/config/testnet 120893 > ~/r
 op-deployer inspect rollup --workdir ~/running-sova/config/testnet 120893 > ~/running-sova/config/testnet/rollup.json
 ```
 
+### Automation
+
+Run the script [here](/scripts/run-op-deployer.sh) to run all the op-deployer commands. Be sure to update the script `intent.toml` file and other config vars.
+
 ## Using optimism-package to deploy using op-deployer under the hood
 
 Download the repo at [ethpandops/optimism-package](https://github.com/ethpandaops/optimism-package). This repo is a combination of the ethpandops/ethereum-package repo and the op-deployer tool.
@@ -121,3 +125,8 @@ NOTES:
     cd ..
     ```
   - Then upload sova-bedrock-op-testnet-artifacts.tar.gz to the appropriate release on GitHub under your desired tag (e.g. sova-op-deployer-v0.4.0-rc.2). Use the github UI to select the sova-bedrock-op-testnet-artifacts.tar.gz file for upload.
+
+### Shortcuts
+
+1. You can use the optimism-package to generate all admin keys for the network. The keys are generated [here](https://github.com/ethpandaops/optimism-package/blob/52ed3e6e8f1788adcac15baf4b65b408cf13961a/static_files/scripts/fund.sh#L12) in the code. Be sure to generate a new mnemoic other seed data.
+2. You can use the op-deployer pipeline in the optimism-package to generate the intents.toml file.
