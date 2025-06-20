@@ -1,14 +1,14 @@
-configType = "standard-overrides"
+configType = "custom"
 l1ChainID = 11155111
 fundDevAccounts = false
 useInterop = true
-l1ContractsLocator = "file:///Users/powvt/optimism/packages/contracts-bedrock/forge-artifacts/"
-l2ContractsLocator = "file:///Users/powvt/optimism/packages/contracts-bedrock/forge-artifacts/"
+l1ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/sova-op-deployer-v0.4.0-rc.2/sova-bedrock-op-testnet-artifacts.tar.gz"
+l2ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/sova-op-deployer-v0.4.0-rc.2/sova-bedrock-op-testnet-artifacts.tar.gz"
 
 [superchainRoles]
-  proxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-  protocolVersionsOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-  guardian = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  SuperchainProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  SuperchainGuardian = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  ProtocolVersionsOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
 
 [[chains]]
   id = "0x000000000000000000000000000000000000000000000000000000000001d83d"
@@ -20,12 +20,19 @@ l2ContractsLocator = "file:///Users/powvt/optimism/packages/contracts-bedrock/fo
   eip1559Elasticity = 6
   operatorFeeScalar = 0
   operatorFeeConstant = 0
+
   [chains.roles]
     l1ProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
     l2ProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
     systemConfigOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
     unsafeBlockSigner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-    batcher = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-    proposer = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    batcher = "0xaB9A78B755B2550bd570352A1E54ebC15B49cd5B"
+    proposer = "0x9b454B3e1A0b1f4A0eD94264D73a9a72E876e9ea"
     challenger = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
 
+  [chains.deployOverrides]
+    l2BlockTime = 2
+
+[globalDeployOverrides]
+  l2GenesisInteropTimeOffset = "0x0"
+  l2GenesisIsthmusTimeOffset = "0x0"

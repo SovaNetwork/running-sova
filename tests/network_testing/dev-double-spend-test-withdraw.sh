@@ -202,4 +202,24 @@ TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
 echo "Balance: $BALANCE"
 echo "Total Supply: $TOTAL_SUPPLY"
 
+cast send \
+    --rpc-url "$ETH_RPC_URL" \
+    --private-key "$ETH_PRIVATE_KEY" \
+    --gas-limit 100000 \
+    --chain-id "$CHAIN_ID" \
+    "$UBTC_CONTRACT_ADDRESS" \
+    "transfer(address,uint256)" \
+    "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" \
+    "100"
+
+echo "Checking contract state..."
+    BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
+        "balanceOf(address)" \
+        "$ETH_ADDRESS" | cast to-dec)
+    TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
+        "totalSupply()" | cast to-dec)
+
+    echo "Balance: $BALANCE"
+    echo "Total Supply: $TOTAL_SUPPLY"
+
 echo "Done!"
