@@ -186,7 +186,7 @@ cast send \
     --gas-limit 300000 \
     --chain-id "$CHAIN_ID" \
     "$UBTC_CONTRACT_ADDRESS" \
-    "withdraw(uint64,uint64,uint32,string)" \
+    "withdraw(uint64,uint64,uint64,string)" \
     "$WITHDRAWAL_AMOUNT" \
     "$WITHDRAWAL_FEE" \
     "$BTC_BLOCK_HEIGHT" \
