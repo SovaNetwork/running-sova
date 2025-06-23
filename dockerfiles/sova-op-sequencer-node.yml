@@ -12,7 +12,7 @@ services:
   sova-reth:
     image: ghcr.io/sovanetwork/sova-reth:v0.0.6
     environment:
-      - NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
+      - NETWORK_UTXOS_API_KEY=${INDEXER_SHARED_API_KEY:-}
     command: >
       node
       --chain /config/testnet-sepolia/genesis.json
@@ -188,11 +188,14 @@ services:
   # OP Stack components
   op-node:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.2
+    environment:
+      - OP_NODE_L2_ENGINE_AUTH=/config/testnet-sepolia/jwt.txt
     # P2P disabled (single sequencer environment)
     command: >
       op-node
       --l2=http://sova-reth:8551
       --l2.jwt-secret=/config/testnet-sepolia/jwt.txt
+      --interop.jwt-secret=/config/testnet-sepolia/jwt.txt
       --sequencer.enabled
       --sequencer.l1-confs=5
       --verifier.l1-confs=4
