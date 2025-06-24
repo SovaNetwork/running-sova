@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Simple SovaBTC deposit test
-# This script only tests the depositBTC function
+# This script only tests the depositBTC flow
 
 # Exit on error
 set -e
@@ -29,6 +29,39 @@ TX_AMOUNT=49.999 # in BTC
 # Function to convert BTC to smallest unit (satoshis)
 btc_to_sats() {
     echo "$1 * 100000000" | bc | cut -d'.' -f1
+}
+
+# Function to find vout index for SovaBTC address
+find_vout_index() {
+    local tx_hex=$1
+    local target_address=$2
+
+    # Decode transaction and parse the output
+    local decode_output=$(satoshi-suite decode-raw-tx --tx-hex "$tx_hex" 2>/dev/null)
+
+    # Convert target address to uppercase for comparison
+    local target_upper=$(echo "$target_address" | tr '[:lower:]' '[:upper:]')
+
+    # Extract vout entries and find the matching address
+    echo "$decode_output" | awk -v target="$target_upper" '
+        # Track current vout index
+        /n: [0-9]+/ {
+            n_value = $2
+            gsub(/,/, "", n_value)
+        }
+
+        # Check for address match (case insensitive)
+        /Address<NetworkUnchecked>\(/ {
+            address_line = $0
+            gsub(/.*Address<NetworkUnchecked>\(/, "", address_line)
+            gsub(/\).*/, "", address_line)
+
+            if (toupper(address_line) == target) {
+                print n_value
+                exit
+            }
+        }
+    '
 }
 
 # Function to extract transaction hex
@@ -88,6 +121,16 @@ satoshi-suite decode-raw-tx --tx-hex "$TX_HEX"
 # Convert TX_AMOUNT to satoshis 
 AMOUNT_SATS=$(btc_to_sats $TX_AMOUNT)
 echo "Deposit Amount: $AMOUNT_SATS satoshis"
+
+# Find the vout index for the SovaBTC receive address
+VOUT_INDEX=$(find_vout_index "$TX_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+
+if [ -z "$VOUT_INDEX" ]; then
+    echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
+    exit 1
+fi
+
+echo "Vout Index: $VOUT_INDEX"
 
 echo "Submitting deposit to SovaBTC contract..."
 cast send \
