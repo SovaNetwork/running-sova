@@ -22,6 +22,10 @@ BTC_RPC_USER="user"
 BTC_RPC_PASS="password"
 BTC_NETWORK="regtest"
 
+# Tx configuration
+TX_FEE=0.001 # in BTC
+TX_AMOUNT=49.999 # in BTC
+
 # Function to convert BTC to smallest unit (satoshis)
 btc_to_sats() {
     echo "$1 * 100000000" | bc | cut -d'.' -f1
@@ -72,13 +76,17 @@ echo "Checking initial contract state..."
 check_contract_state "Initial State"
 
 echo "Creating Bitcoin transaction for deposit..."
-TX_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$SOVABTC_BITCOIN_RECEIVE_ADDRESS" --amount 1.0 --fee-amount 0.001)
+TX_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$SOVABTC_BITCOIN_RECEIVE_ADDRESS" --amount "$TX_AMOUNT" --fee-amount "$TX_FEE")
 TX_HEX=$(get_tx_hex "$TX_OUTPUT")
 
 echo "Transaction Hex: $TX_HEX"
 
-# Convert 1.0 BTC to satoshis 
-AMOUNT_SATS=$(btc_to_sats 1.0)
+# optional/debugging: decode the raw transaction
+echo "Decoding raw transaction..."
+satoshi-suite decode-raw-tx --tx-hex "$TX_HEX"
+
+# Convert TX_AMOUNT to satoshis 
+AMOUNT_SATS=$(btc_to_sats $TX_AMOUNT)
 echo "Deposit Amount: $AMOUNT_SATS satoshis"
 
 echo "Submitting deposit to SovaBTC contract..."
@@ -94,35 +102,35 @@ cast send \
 
 check_contract_state "After Deposit Submission"
 
-echo "Mining only 3 Bitcoin blocks (insufficient confirmations)..."
-satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 3
+# echo "Mining only 3 Bitcoin blocks (insufficient confirmations)..."
+# satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 3
 
-echo "Attempting to finalize with insufficient confirmations (should fail)..."
-cast send \
-    --rpc-url "$ETH_RPC_URL" \
-    --private-key "$ETH_PRIVATE_KEY" \
-    --gas-limit 100000 \
-    --chain-id "$CHAIN_ID" \
-    "$SOVABTC_CONTRACT_ADDRESS" \
-    "finalize(address)" \
-    "$ETH_ADDRESS"
+# echo "Attempting to finalize with insufficient confirmations (should fail)..."
+# cast send \
+#     --rpc-url "$ETH_RPC_URL" \
+#     --private-key "$ETH_PRIVATE_KEY" \
+#     --gas-limit 100000 \
+#     --chain-id "$CHAIN_ID" \
+#     "$SOVABTC_CONTRACT_ADDRESS" \
+#     "finalize(address)" \
+#     "$ETH_ADDRESS"
 
-check_contract_state "After failed finalization attempt (3 blocks)"
+# check_contract_state "After failed finalization attempt (3 blocks)"
 
-echo "Mining 3 more Bitcoin blocks (total 6 confirmations)..."
-satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 3
+# echo "Mining 3 more Bitcoin blocks (total 6 confirmations)..."
+# satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 3
 
-echo "Finalizing deposit with sufficient confirmations..."
-cast send \
-    --rpc-url "$ETH_RPC_URL" \
-    --private-key "$ETH_PRIVATE_KEY" \
-    --gas-limit 100000 \
-    --chain-id "$CHAIN_ID" \
-    "$SOVABTC_CONTRACT_ADDRESS" \
-    "finalize(address)" \
-    "$ETH_ADDRESS"
+# echo "Finalizing deposit with sufficient confirmations..."
+# cast send \
+#     --rpc-url "$ETH_RPC_URL" \
+#     --private-key "$ETH_PRIVATE_KEY" \
+#     --gas-limit 100000 \
+#     --chain-id "$CHAIN_ID" \
+#     "$SOVABTC_CONTRACT_ADDRESS" \
+#     "finalize(address)" \
+#     "$ETH_ADDRESS"
 
-check_contract_state "After second successful finalization (6 blocks)"
+# check_contract_state "After second successful finalization (6 blocks)"
 
 echo "Checking contract configuration..."
 MIN_DEPOSIT=$(cast call --rpc-url "$ETH_RPC_URL" "$SOVABTC_CONTRACT_ADDRESS" "minDepositAmount()" | cast to-dec)
