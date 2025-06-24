@@ -9,7 +9,7 @@
 services:
   # Core Sova components
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:v0.0.6
+    image: ghcr.io/sovanetwork/sova-reth:latest
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
     command: >

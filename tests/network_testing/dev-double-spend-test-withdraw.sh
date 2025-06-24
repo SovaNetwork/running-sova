@@ -5,18 +5,18 @@
 # https://github.com/SovaNetwork/running-sova
 # https://github.com/foundry-rs
 
-# This script tests double-spend protection on a sova-reth execution client
+# This script tests double-spend protection on a sova-reth execution client with SovaBTC
 #
 # It:
 # 1. Creates two Bitcoin transactions spending the same UTXO:
 #    - First with 0.001 BTC fee
 #    - Second with 0.01 BTC fee (broadcasted to Bitcoin network)
-# 2. Submits the first transaction to uBTC contract for deposit
+# 2. Submits the first transaction to SovaBTC contract for deposit
 # 3. Broadcasts the second transaction to Bitcoin network in same bitcoin block
 # 4. Mines confirmation blocks to ensure the double spend Bitcoin transaction is confirmed
-# 5. Check the balanceOf user and total supply slots in the sova uBTC smart contract
-# 6. User user creates another Bitcoin transaction for a deposit of the same amount and sends to the node
-# 7. Check the balanceOf user and total supply slots again
+# 5. Check the balanceOf user, pending deposits, and total supply slots in the sova SovaBTC smart contract
+# 6. User creates another Bitcoin transaction for a deposit of the same amount and sends to the node
+# 7. Finalizes pending transactions and checks the contract state
 # 8. Confirm bitcoin transaction by mining bitcoin blocks
 # 9. Tests withdrawal functionality after the double-spend attack
 
@@ -26,23 +26,21 @@ set -e
 # Configuration
 WALLET_1="user"
 WALLET_2="miner"
-UBTC_CONTRACT_ADDRESS="0x2100000000000000000000000000000000000020" # native wrapped BTC predeploy address
-UBTC_BITCOIN_RECEIVE_ADDRESS="bcrt1qy8ke4mwdw38qlvmkllvrtxmdsp59tklkkukuhx"  # deterministic address based on the network signing wallet's bip32 derivation path
+SOVABTC_CONTRACT_ADDRESS="0x2100000000000000000000000000000000000020" # native wrapped BTC predeploy address
+SOVABTC_BITCOIN_RECEIVE_ADDRESS="bcrt1qy8ke4mwdw38qlvmkllvrtxmdsp59tklkkukuhx"  # deterministic address based on the network signing wallet's bip32 derivation path
 DOUBLE_SPEND_RECEIVE_ADDRESS="bcrt1q6xxa0arlrk6jdz02alxc6smdv5g953v7zkswaw" # random address for double spend
 ETH_RPC_URL="http://localhost:8545"
 ETH_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 ETH_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 CHAIN_ID="120893"
 
-# Bitcoin RPC Configuration - using the working parameters
-# Port automatically assigned by satoshi-suite
+# Bitcoin RPC Configuration
 BTC_RPC_URL="http://localhost"
 BTC_RPC_USER="user"
 BTC_RPC_PASS="password"
 BTC_NETWORK="regtest"
 
 # UTXO Indexer Configuration
-# Default values if not provided in environment
 INDEXER_DB_HOST="localhost"
 INDEXER_DB_PORT="5557"
 INDEXER_DB_URL="http://${INDEXER_DB_HOST}:${INDEXER_DB_PORT}"
@@ -59,6 +57,30 @@ get_tx_hex() {
     echo "$hex"
 }
 
+# Function to check contract state with pending transactions
+check_contract_state() {
+    local description=$1
+    echo "=== $description ==="
+    
+    BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$SOVABTC_CONTRACT_ADDRESS" \
+        "balanceOf(address)" \
+        "$ETH_ADDRESS" | cast to-dec)
+    TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$SOVABTC_CONTRACT_ADDRESS" \
+        "totalSupply()" | cast to-dec)
+    PENDING_DEPOSIT=$(cast call --rpc-url "$ETH_RPC_URL" "$SOVABTC_CONTRACT_ADDRESS" \
+        "pendingDepositAmountOf(address)" \
+        "$ETH_ADDRESS" | cast to-dec)
+    PENDING_WITHDRAWAL=$(cast call --rpc-url "$ETH_RPC_URL" "$SOVABTC_CONTRACT_ADDRESS" \
+        "pendingWithdrawalAmountOf(address)" \
+        "$ETH_ADDRESS" | cast to-dec)
+
+    echo "Balance: $BALANCE satoshis"
+    echo "Total Supply: $TOTAL_SUPPLY satoshis"
+    echo "Pending Deposit: $PENDING_DEPOSIT satoshis"
+    echo "Pending Withdrawal: $PENDING_WITHDRAWAL satoshis"
+    echo ""
+}
+
 cd ~
 
 echo "Creating Bitcoin wallets..."
@@ -71,10 +93,10 @@ satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "
 
 echo "Creating Bitcoin transactions..."
 # First transaction with 0.001 fee
-TX1_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$UBTC_BITCOIN_RECEIVE_ADDRESS" --amount 49.999 --fee-amount 0.001)
+TX1_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$SOVABTC_BITCOIN_RECEIVE_ADDRESS" --amount 49.999 --fee-amount 0.001)
 TX1_HEX=$(get_tx_hex "$TX1_OUTPUT")
 
-# Second transaction with 0.01 fee
+# Second transaction with 0.01 fee (double spend)
 TX2_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$DOUBLE_SPEND_RECEIVE_ADDRESS" --amount 49.99 --fee-amount 0.01)
 TX2_HEX=$(get_tx_hex "$TX2_OUTPUT")
 
@@ -85,16 +107,18 @@ echo "TX2 Hex: $TX2_HEX"
 # Convert 49.999 BTC to satoshis
 AMOUNT_SATS=$(btc_to_sats 49.999)
 
-echo "Submitting first transaction to Ethereum contract (0.001 fee)..."
+echo "Submitting first transaction to SovaBTC contract (0.001 fee)..."
 cast send \
     --rpc-url "$ETH_RPC_URL" \
     --private-key "$ETH_PRIVATE_KEY" \
     --gas-limit 250000 \
     --chain-id "$CHAIN_ID" \
-    "$UBTC_CONTRACT_ADDRESS" \
+    "$SOVABTC_CONTRACT_ADDRESS" \
     "depositBTC(uint64,bytes)" \
     "$AMOUNT_SATS" \
     "0x$TX1_HEX"
+
+check_contract_state "After first deposit submission (before finalization)"
 
 echo "Broadcasting competing Bitcoin transaction (0.01 fee)..."
 TX_BROADCAST_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" broadcast-tx --tx-hex "$TX2_HEX")
@@ -105,43 +129,49 @@ satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_1" --blocks 1
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 100
 
-echo "Checking contract state..."
-BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-    "balanceOf(address)" \
-    "$ETH_ADDRESS" | cast to-dec)
-TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-    "totalSupply()" | cast to-dec)
+echo "Attempting to finalize first deposit (should succeed and revert the pending balance slot back to zero due to double spend)..."
+cast send \
+    --rpc-url "$ETH_RPC_URL" \
+    --private-key "$ETH_PRIVATE_KEY" \
+    --gas-limit 100000 \
+    --chain-id "$CHAIN_ID" \
+    "$SOVABTC_CONTRACT_ADDRESS" \
+    "finalize(address)" \
+    "$ETH_ADDRESS"
 
-echo "Balance: $BALANCE"
-echo "Total Supply: $TOTAL_SUPPLY"
+check_contract_state "After attempting to finalize double-spend deposit"
 
 echo "Creating new Bitcoin transaction for second VALID deposit..."
-TX3_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$UBTC_BITCOIN_RECEIVE_ADDRESS" --amount 49.999 --fee-amount 0.001)
+TX3_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$SOVABTC_BITCOIN_RECEIVE_ADDRESS" --amount 49.999 --fee-amount 0.001)
 TX3_HEX=$(get_tx_hex "$TX3_OUTPUT")
 
-echo "Submitting second deposit to Ethereum contract..."
+echo "Submitting second deposit to SovaBTC contract..."
 cast send \
     --rpc-url "$ETH_RPC_URL" \
     --private-key "$ETH_PRIVATE_KEY" \
     --gas-limit 250000 \
     --chain-id "$CHAIN_ID" \
-    "$UBTC_CONTRACT_ADDRESS" \
+    "$SOVABTC_CONTRACT_ADDRESS" \
     "depositBTC(uint64,bytes)" \
     "$AMOUNT_SATS" \
     "0x$TX3_HEX"
 
-echo "Checking contract state..."
-BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-    "balanceOf(address)" \
-    "$ETH_ADDRESS" | cast to-dec)
-TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-    "totalSupply()" | cast to-dec)
-
-echo "Balance: $BALANCE"
-echo "Total Supply: $TOTAL_SUPPLY"
+check_contract_state "After second deposit submission (before finalization)"
 
 echo "Mining confirmation blocks for second deposit..."
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 7
+
+echo "Finalizing second deposit..."
+cast send \
+    --rpc-url "$ETH_RPC_URL" \
+    --private-key "$ETH_PRIVATE_KEY" \
+    --gas-limit 100000 \
+    --chain-id "$CHAIN_ID" \
+    "$SOVABTC_CONTRACT_ADDRESS" \
+    "finalize(address)" \
+    "$ETH_ADDRESS"
+
+check_contract_state "After finalizing second deposit"
 
 # Get current Bitcoin block height
 BTC_BLOCK_HEIGHT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" get-block-height | grep "Current block height:" | cut -d' ' -f8)
@@ -158,7 +188,7 @@ while true; do
     echo "Latest indexed block: $LATEST_BLOCK"
     
     if [ "$LATEST_BLOCK" -ge "$BTC_BLOCK_HEIGHT" ]; then
-        UTXOS=$(curl -s "${INDEXER_DB_URL}/spendable-utxos/block/$BTC_BLOCK_HEIGHT/address/$UBTC_BITCOIN_RECEIVE_ADDRESS")
+        UTXOS=$(curl -s "${INDEXER_DB_URL}/spendable-utxos/block/$BTC_BLOCK_HEIGHT/address/$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
         
         # Check if we got an error response
         if ! echo "$UTXOS" | jq -e '.error' > /dev/null; then
@@ -185,41 +215,38 @@ cast send \
     --private-key "$ETH_PRIVATE_KEY" \
     --gas-limit 300000 \
     --chain-id "$CHAIN_ID" \
-    "$UBTC_CONTRACT_ADDRESS" \
+    "$SOVABTC_CONTRACT_ADDRESS" \
     "withdraw(uint64,uint64,uint64,string)" \
     "$WITHDRAWAL_AMOUNT" \
     "$WITHDRAWAL_FEE" \
     "$BTC_BLOCK_HEIGHT" \
     "$NEW_ADDRESS"
 
-echo "Checking contract state..."
-BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-    "balanceOf(address)" \
-    "$ETH_ADDRESS" | cast to-dec)
-TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-    "totalSupply()" | cast to-dec)
+check_contract_state "After withdrawal submission (before finalization)"
 
-echo "Balance: $BALANCE"
-echo "Total Supply: $TOTAL_SUPPLY"
-
+echo "Finalizing withdrawal..."
 cast send \
     --rpc-url "$ETH_RPC_URL" \
     --private-key "$ETH_PRIVATE_KEY" \
     --gas-limit 100000 \
     --chain-id "$CHAIN_ID" \
-    "$UBTC_CONTRACT_ADDRESS" \
-    "transfer(address,uint256)" \
-    "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" \
-    "100"
+    "$SOVABTC_CONTRACT_ADDRESS" \
+    "finalize(address)" \
+    "$ETH_ADDRESS"
 
-echo "Checking contract state..."
-    BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-        "balanceOf(address)" \
-        "$ETH_ADDRESS" | cast to-dec)
-    TOTAL_SUPPLY=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
-        "totalSupply()" | cast to-dec)
+check_contract_state "After withdrawal finalization"
 
-    echo "Balance: $BALANCE"
-    echo "Total Supply: $TOTAL_SUPPLY"
+# echo "Testing transfer (should work when no pending transactions)..."
+# cast send \
+#     --rpc-url "$ETH_RPC_URL" \
+#     --private-key "$ETH_PRIVATE_KEY" \
+#     --gas-limit 100000 \
+#     --chain-id "$CHAIN_ID" \
+#     "$SOVABTC_CONTRACT_ADDRESS" \
+#     "transfer(address,uint256)" \
+#     "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" \
+#     "100"
+
+# check_contract_state "After transfer"
 
 echo "Done!"
