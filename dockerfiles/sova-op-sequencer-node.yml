@@ -12,7 +12,7 @@ services:
   sova-reth:
     image: ghcr.io/sovanetwork/sova-reth:v0.0.6
     environment:
-      - NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
+      - NETWORK_UTXOS_API_KEY=${INDEXER_SHARED_API_KEY:-}
     command: >
       node
       --chain /config/testnet-sepolia/genesis.json
@@ -33,12 +33,18 @@ services:
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
+      --port=30303
+      --discovery.port=30303
+      --rollup.disable-tx-pool-gossip
+      --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
     ports:
-      - "8545:8545"
-      - "8546:8546"
-      - "8551:8551"
+      - "8545:8545"     # HTTP RPC
+      - "8546:8546"     # WebSocket RPC
+      - "30303:30303"   # P2P TCP
+      - "30303:30303/udp"  # P2P UDP
+      - "6060:6060"     # Metrics
     networks:
       - sova_network
     volumes:
@@ -119,7 +125,7 @@ services:
   network-enclave:
     image: ghcr.io/sovanetwork/network-enclave:v0.0.4
     environment:
-     - LOG_LEVEL=${RUST_LOG:-info}
+      - LOG_LEVEL=${RUST_LOG:-info}
       - BIP32_SEED=${BIP32_SEED}
       - ENCLAVE_API_KEY=${ENCLAVE_SHARED_API_KEY:-}
     ports:
@@ -187,11 +193,11 @@ services:
 
   # OP Stack components
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.2
-    # P2P disabled (single sequencer environment)
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.4
     command: >
       op-node
       --l2=http://sova-reth:8551
+      --l2.enginekind=reth
       --l2.jwt-secret=/config/testnet-sepolia/jwt.txt
       --sequencer.enabled
       --sequencer.l1-confs=5
@@ -200,17 +206,29 @@ services:
       --rpc.addr=0.0.0.0
       --rpc.port=9545
       --rpc.enable-admin
-      --p2p.disable
-      --p2p.sequencer.key=${SEQUENCER_PRIVATE_KEY}
       --l1=${ALCHEMY_L1_RPC_URL}
       --l1.rpckind=alchemy
       --l1.beacon=${L1_BEACON_URL}
-    depends_on:
-      - sova-reth
+      --p2p.listen.ip=0.0.0.0
+      --p2p.listen.tcp=9222
+      --p2p.listen.udp=9222
+      --p2p.scoring=none
+      --p2p.ban.peers=false
+      --p2p.sequencer.key=${SEQUENCER_PRIVATE_KEY}
+      --metrics.enabled
+      --metrics.addr=0.0.0.0
+      --metrics.port=7300
+      --log.level=info
     volumes:
       - ../config:/config
     ports:
-      - "9545:9545" # HTTP RPC for op-node (for admin/monitoring or other services)
+      - "9545:9545"     # RPC
+      - "9222:9222"     # P2P TCP
+      - "9222:9222/udp" # P2P UDP
+      - "7300:7300"     # Metrics
+    depends_on:
+      sova-reth:
+        condition: service_healthy
     networks:
       - sova_network
     profiles: [op-stack]
@@ -247,6 +265,7 @@ services:
       op-proposer
       --poll-interval=12s
       --proposal-interval=20s
+      --rpc.addr=0.0.0.0
       --rpc.port=8560
       --l1-eth-rpc=${ALCHEMY_L1_RPC_URL}
       --rollup-rpc=http://op-node:9545

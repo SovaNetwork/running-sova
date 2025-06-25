@@ -73,6 +73,10 @@ op-deployer inspect genesis --workdir ~/running-sova/config/testnet 120893 > ~/r
 op-deployer inspect rollup --workdir ~/running-sova/config/testnet 120893 > ~/running-sova/config/testnet/rollup.json
 ```
 
+### Step 6
+
+Change `"interopTime"` in the genesis.json and rollup.json files from `0` to `null`. Without this change, the op-node will try to look for the interop config and also a op-supervisor connection.
+
 ### Automation
 
 Run the script [here](/scripts/run-op-deployer.sh) to run all the op-deployer commands. Be sure to update the script `intent.toml` file and other config vars.
