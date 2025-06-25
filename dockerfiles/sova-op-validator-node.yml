@@ -33,12 +33,11 @@ services:
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
     ports:
-      - "8547:8545"     # HTTP RPC
-      - "8548:8546"     # WebSocket RPC
-      - "8552:8551"     # Engine API
-      - "30304:30303"   # P2P TCP (different port)
-      - "30304:30303/udp"  # P2P UDP
-      - "6061:6060"     # Metrics (different port)
+      - "8545:8545"     # HTTP RPC
+      - "8546:8546"     # WebSocket RPC
+      - "30303:30303"   # P2P TCP
+      - "30303:30303/udp"  # P2P UDP
+      - "6060:6060"     # Metrics
     networks:
       - sova_network
     volumes:
