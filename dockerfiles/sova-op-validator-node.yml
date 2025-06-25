@@ -24,10 +24,10 @@ services:
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
+      --port=30303
       --discovery.port=30303
       --rollup.sequencer-http http://YOUR_SEQUENCER_PUBLIC_IP:8545
       --rollup.disable-tx-pool-gossip
-      --rollup.discovery.v4
       --bootnodes=${SEQUENCER_BOOTNODE}
       --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
@@ -139,6 +139,10 @@ services:
       --p2p.scoring=light
       --p2p.ban.peers=true
       --p2p.bootnodes=${SEQUENCER_P2P_BOOTNODE}
+      --metrics.enabled
+      --metrics.addr=0.0.0.0
+      --metrics.port=7300
+      --log.level=info
     volumes:
       - ../config:/config
     ports:
