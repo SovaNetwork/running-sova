@@ -41,7 +41,7 @@ services:
     networks:
       - sova_network
     volumes:
-      - sequencer-data:/var/lib/sova
+      - validator-data:/var/lib/sova
       - ../config:/config
     depends_on:
       bitcoin-regtest:
@@ -162,7 +162,7 @@ networks:
 
 volumes:
   bitcoin-data:
-  sequencer-data:
+  validator-data:
   sentinel-data:
   utxo-data:
   socket:
