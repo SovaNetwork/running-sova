@@ -1,6 +1,6 @@
 services:
   # Core Sova components
-  # TODO(powvt): Update sequencer url to the actual Sova sequencer URL
+  # TODO(powvt): Update --rollup.sequencer-http to the actual Sova sequencer url
   # NOTE(powvt): Other validator flags: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth:
     image: ghcr.io/sovanetwork/sova-reth:v0.0.6
@@ -14,7 +14,6 @@ services:
       --network-utxos-url http://network-indexer:3031 
       --sentinel-url http://sentinel-server:50051
       --sentinel-confirmation-threshold 6
-      --rollup.sequencer-http http://rpc.sova.io
       --http
       --http.addr 0.0.0.0
       --http.port 8545
@@ -25,11 +24,22 @@ services:
       --authrpc.addr 0.0.0.0
       --authrpc.port 8551
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
+      --discovery.port=30303
+      --nat=extip:0.0.0.0
+      --rollup.sequencer-http http://YOUR_SEQUENCER_PUBLIC_IP:8545
+      --rollup.disable-tx-pool-gossip
+      --rollup.discovery.v4
+      --bootnodes=${SEQUENCER_BOOTNODE}
+      --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
     ports:
-      - "8545:8545" # HTTP JSON-RPC for validator (read-only usage)
-      # 8546 (WS) and 8551 (Engine API) are not exposed
+      - "8547:8545"     # HTTP RPC
+      - "8548:8546"     # WebSocket RPC
+      - "8552:8551"     # Engine API
+      - "30304:30303"   # P2P TCP (different port)
+      - "30304:30303/udp"  # P2P UDP
+      - "6061:6060"     # Metrics (different port)
     networks:
       - sova_network
     volumes:
@@ -67,7 +77,7 @@ services:
       - BITCOIN_RPC_MAX_RETRIES=5
       - RUST_LOG=${RUST_LOG:-info}
     ports:
-      - "50051:50051"
+      - "50052:50051"
     networks:
       - sova_network
     volumes:
@@ -109,27 +119,35 @@ services:
 
   # OP Stack components
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.2
-    # P2P disabled -> single sequencer environment
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.4
     command: >
       op-node
       --l2=http://sova-reth:8551
+      --l2.enginekind=reth
       --l2.jwt-secret=/config/testnet-sepolia/jwt.txt
+      --interop.jwt-secret=/config/testnet-sepolia/jwt.txt
       --verifier.l1-confs=4
       --rollup.config=/config/testnet-sepolia/rollup.json
       --rpc.addr=0.0.0.0
       --rpc.port=9545
       --rpc.enable-admin
-      --p2p.disable
       --l1=${ALCHEMY_L1_RPC_URL}
       --l1.rpckind=alchemy
       --l1.beacon=${L1_BEACON_URL}
-    depends_on:
-      - sova-reth
+      --p2p.listen.ip=0.0.0.0
+      --p2p.listen.tcp=9003
+      --p2p.listen.udp=9003
+      --p2p.bootnodes=${SEQUENCER_P2P_BOOTNODE}
+      --p2p.scoring=none
+      --p2p.ban.peers=true
+      --syncmode=consensus-layer
     volumes:
       - ../config:/config
     ports:
-      - "9545:9545"
+      - "9546:9545"     # Rollup RPC (different port)
+      - "9004:9003"     # P2P TCP (different port)
+      - "9004:9003/udp" # P2P UDP
+      - "7303:7300"     # Metrics (different port)
     networks:
       - sova_network
     profiles: [op-stack]

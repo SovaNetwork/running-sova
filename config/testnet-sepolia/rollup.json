@@ -32,7 +32,7 @@
   "granite_time": 0,
   "holocene_time": 0,
   "isthmus_time": 0,
-  "interop_time": 0,
+  "interop_time": null,
   "batch_inbox_address": "0x00e0ceeb893940a2b32a8bf223bcfd40f1d687af",
   "deposit_contract_address": "0xe76264bff5e21a9c7cd67bcdd7c4c076a50ac734",
   "l1_system_config_address": "0xe55c29ed49f057f3987e87e6680ce08b3d086c9b",
