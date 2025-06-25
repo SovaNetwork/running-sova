@@ -25,7 +25,6 @@ services:
       --authrpc.port 8551
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
       --discovery.port=30303
-      --nat=extip:0.0.0.0
       --rollup.sequencer-http http://YOUR_SEQUENCER_PUBLIC_IP:8545
       --rollup.disable-tx-pool-gossip
       --rollup.discovery.v4
@@ -135,19 +134,18 @@ services:
       --l1.rpckind=alchemy
       --l1.beacon=${L1_BEACON_URL}
       --p2p.listen.ip=0.0.0.0
-      --p2p.listen.tcp=9003
-      --p2p.listen.udp=9003
-      --p2p.bootnodes=${SEQUENCER_P2P_BOOTNODE}
-      --p2p.scoring=none
+      --p2p.listen.tcp=9222
+      --p2p.listen.udp=9222
+      --p2p.scoring=light
       --p2p.ban.peers=true
-      --syncmode=consensus-layer
+      --p2p.bootnodes=${SEQUENCER_P2P_BOOTNODE}
     volumes:
       - ../config:/config
     ports:
-      - "9546:9545"     # Rollup RPC (different port)
-      - "9004:9003"     # P2P TCP (different port)
-      - "9004:9003/udp" # P2P UDP
-      - "7303:7300"     # Metrics (different port)
+      - "9545:9545"     # RPC
+      - "9223:9222"     # P2P TCP
+      - "9223:9222/udp" # P2P UDP
+      - "7300:7300"     # Metrics
     networks:
       - sova_network
     profiles: [op-stack]

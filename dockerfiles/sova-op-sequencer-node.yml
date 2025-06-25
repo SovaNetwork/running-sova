@@ -35,7 +35,6 @@ services:
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
       --port=30303
       --discovery.port=30303
-      --nat=extip:0.0.0.0
       --rollup.disable-tx-pool-gossip
       --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
@@ -212,12 +211,11 @@ services:
       --l1.rpckind=alchemy
       --l1.beacon=${L1_BEACON_URL}
       --p2p.listen.ip=0.0.0.0
-      --p2p.listen.tcp=9003
-      --p2p.listen.udp=9003
+      --p2p.listen.tcp=9222
+      --p2p.listen.udp=9222
       --p2p.scoring=none
-      --p2p.ban.peers=true
+      --p2p.ban.peers=false
       --p2p.sequencer.key=${SEQUENCER_PRIVATE_KEY}
-      --syncmode=consensus-layer
       --metrics.enabled
       --metrics.addr=0.0.0.0
       --metrics.port=7300
