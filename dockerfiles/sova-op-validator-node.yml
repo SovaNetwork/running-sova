@@ -77,7 +77,7 @@ services:
       - BITCOIN_RPC_MAX_RETRIES=5
       - RUST_LOG=${RUST_LOG:-info}
     ports:
-      - "50052:50051"
+      - "50051:50051"
     networks:
       - sova_network
     volumes:
