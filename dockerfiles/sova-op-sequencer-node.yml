@@ -228,7 +228,7 @@ services:
       - "7300:7300"     # Metrics
     depends_on:
       sova-reth:
-        condition: service_started
+        condition: service_healthy
     networks:
       - sova_network
     profiles: [op-stack]

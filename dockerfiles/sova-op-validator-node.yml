@@ -150,6 +150,9 @@ services:
       - "9223:9222"     # P2P TCP
       - "9223:9222/udp" # P2P UDP
       - "7300:7300"     # Metrics
+    depends_on:
+      sova-reth:
+        condition: service_healthy
     networks:
       - sova_network
     profiles: [op-stack]
