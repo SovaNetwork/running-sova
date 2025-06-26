@@ -8,11 +8,11 @@ services:
       node
       --chain /config/testnet-sepolia/genesis.json
       --btc-network ${NETWORK:-regtest}
-      --btc-network-url http://bitcoin-regtest
+      --btc-network-url http://${SEQUENCER_IP}
       --btc-rpc-username user
       --btc-rpc-password password
-      --network-utxos-url http://network-indexer:3031 
-      --sentinel-url http://sentinel-server:50051
+      --network-utxos-url http://${SEQUENCER_IP}:3031 
+      --sentinel-url http://${SENTINEL_IP}:50051
       --sentinel-confirmation-threshold 6
       --http
       --http.addr 0.0.0.0
@@ -25,10 +25,9 @@ services:
       --authrpc.port 8551
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
       --port=30303
-      --discovery.port=30303
-      --rollup.sequencer-http http://YOUR_SEQUENCER_PUBLIC_IP:8545
+      --rollup.sequencer-http=http://${SEQUENCER_IP}:8545
       --rollup.disable-tx-pool-gossip
-      --bootnodes=${SEQUENCER_BOOTNODE}
+      --bootnodes=enode://188eaf661774caf05238375debdb5c96bfa2a23d9b99e3843995bb4e46901fa09e13447d8c1c56e0ac1a93e335b85be07b444f4c8ffe24f024002399f7895559@${SEQUENCER_IP}:30303
       --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
@@ -43,77 +42,17 @@ services:
     volumes:
       - validator-data:/var/lib/sova
       - ../config:/config
-    depends_on:
-      bitcoin-regtest:
-        condition: service_healthy
-      sentinel-server:
-        condition: service_started
-    profiles: [core]
-    healthcheck:
-      test: [
-        "CMD",
-        "curl",
-        "-H", "Content-Type: application/json",
-        "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
-        "http://localhost:8545"
-      ]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-
-  sentinel-server:
-    image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
-    environment:
-      - SOVA_SENTINEL_HOST=0.0.0.0
-      - SOVA_SENTINEL_PORT=50051
-      - SOVA_SENTINEL_DB_PATH=/app/data/slot_locks.db
-      - BITCOIN_RPC_URL=http://bitcoin-regtest:18443
-      - BITCOIN_RPC_USER=user
-      - BITCOIN_RPC_PASS=password
-      - BITCOIN_CONFIRMATION_THRESHOLD=6
-      - BITCOIN_REVERT_THRESHOLD=18
-      - BITCOIN_RPC_MAX_RETRIES=5
-      - RUST_LOG=${RUST_LOG:-info}
-    ports:
-      - "50051:50051"
-    networks:
-      - sova_network
-    volumes:
-      - sentinel-data:/app/data
-    depends_on:
-      bitcoin-regtest:
-        condition: service_healthy
-    profiles: [core]
-  
-  # Supporting Sova components
-  bitcoin-regtest:
-    image: ruimarinho/bitcoin-core@sha256:79dd32455cf8c268c63e5d0114cc9882a8857e942b1d17a6b8ec40a6d44e3981 # ruimarinho/bitcoin-core:24
-    command:
-      -regtest=1
-      -server=1
-      -txindex=1
-      -rpcallowip=0.0.0.0/0
-      -rpcbind=0.0.0.0
-      -rpcuser=user
-      -rpcpassword=password
-    ports:
-      - "18443:18443"
-    networks:
-      - sova_network
-    volumes:
-      - bitcoin-data:/home/bitcoin/.bitcoin
-    healthcheck:
-      test: [
-        "CMD",
-        "bitcoin-cli",
-        "-regtest",
-        "-rpcuser=user",
-        "-rpcpassword=password",
-        "getblockchaininfo"
-      ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      #healthcheck:
+      #  test: [
+      #    "CMD",
+      #    "curl",
+      #    "-H", "Content-Type: application/json",
+      #    "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
+      #    "http://sova-reth:8545"
+      #  ]
+      #  interval: 5s
+      #  timeout: 10s
+      #  retries: 5
 
   # OP Stack components
   op-node:
@@ -136,8 +75,7 @@ services:
       --p2p.listen.tcp=9222
       --p2p.listen.udp=9222
       --p2p.scoring=light
-      --p2p.ban.peers=true
-      --p2p.bootnodes=${SEQUENCER_P2P_BOOTNODE}
+      --p2p.bootnodes=enr:-JG4QGg0gEy8ooIvbHAqKslHoHgiA4Iz_1MgRGuWlztbgOKhckDHMMBwnO8CGEiGZ9CtpB4XVGNpB2eRJ2PwBAqTteeGAZeqpH_OgmlkgnY0gmlwhAoAAQmJc2VjcDI1NmsxoQM64-mzcJiRGB7iZ2zft1uCmVuhg9KkxkDCJc6ZFWzp34N0Y3CCJAaDdWRwgiQG
       --metrics.enabled
       --metrics.addr=0.0.0.0
       --metrics.port=7300
@@ -146,23 +84,19 @@ services:
       - ../config:/config
     ports:
       - "9545:9545"     # RPC
-      - "9223:9222"     # P2P TCP
+      - "9222:9222"     # P2P TCP
       - "9223:9222/udp" # P2P UDP
       - "7300:7300"     # Metrics
     depends_on:
-      sova-reth:
-        condition: service_healthy
+      - sova-reth
     networks:
       - sova_network
-    profiles: [op-stack]
 
 networks:
   sova_network:
     driver: bridge
 
 volumes:
-  bitcoin-data:
   validator-data:
   sentinel-data:
-  utxo-data:
   socket:

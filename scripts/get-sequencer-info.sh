@@ -6,7 +6,7 @@ echo "Getting Sequencer Info..."
 PEER_ID=$(curl -s -X POST \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"opp2p_self","params":[],"id":1}' \
-  http://localhost:9545 | jq -r '.result.peerID')
+  http://${SEQUENCER_IP}:9545 | jq -r '.result.peerID')
 
 # Get public IP
 PUBLIC_IP=$(curl -s ifconfig.me)
