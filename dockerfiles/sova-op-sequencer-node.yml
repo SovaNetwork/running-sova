@@ -56,17 +56,17 @@ services:
       sentinel-server:
         condition: service_started
     profiles: [core]
-    healthcheck:
-      test: [
-        "CMD",
-        "curl",
-        "-H", "Content-Type: application/json",
-        "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
-        "http://localhost:8545"
-      ]
-      interval: 5s
-      timeout: 10s
-      retries: 5
+      #healthcheck:
+      #  test: [
+      #    "CMD",
+      #    "curl",
+      #    "-H", "Content-Type: application/json",
+      #    "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
+      #    "http://localhost:8545"
+      #  ]
+      #  interval: 5s
+      #  timeout: 10s
+      #  retries: 5
 
   sentinel-server:
     image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
@@ -228,8 +228,7 @@ services:
       - "9222:9222/udp" # P2P UDP
       - "7300:7300"     # Metrics
     depends_on:
-      sova-reth:
-        condition: service_healthy
+      - sova-reth
     networks:
       - sova_network
     profiles: [op-stack]
