@@ -27,7 +27,7 @@ set -e
 WALLET_1="user"
 WALLET_2="miner"
 SOVABTC_CONTRACT_ADDRESS="0x2100000000000000000000000000000000000020" # native wrapped BTC predeploy address
-SOVABTC_BITCOIN_RECEIVE_ADDRESS="bcrt1qy8ke4mwdw38qlvmkllvrtxmdsp59tklkkukuhx"  # deterministic address based on the network signing wallet's bip32 derivation path
+SOVABTC_BITCOIN_RECEIVE_ADDRESS="bcrt1qcur7cgvcmcpdqe5v6hpuppswgqqz7nrdgtxulx"  # deterministic address based on the network signing wallet's bip32 derivation path
 DOUBLE_SPEND_RECEIVE_ADDRESS="bcrt1q6xxa0arlrk6jdz02alxc6smdv5g953v7zkswaw" # random address for double spend
 ETH_RPC_URL="http://localhost:8545"
 ETH_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"

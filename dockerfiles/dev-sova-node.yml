@@ -12,6 +12,7 @@ services:
     image: ghcr.io/sovanetwork/sova-reth:latest
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
+      SOVA_SEQUENCER_MODE: true
     command: >
       node
       --chain dev
@@ -115,7 +116,7 @@ services:
       retries: 5
   
   network-enclave:
-    image: ghcr.io/sovanetwork/network-enclave:v0.0.4
+    image: ghcr.io/sovanetwork/network-enclave:v0.0.6
     environment:
       - LOG_LEVEL=${RUST_LOG:-info}
       - BIP32_SEED=${BIP32_SEED}
