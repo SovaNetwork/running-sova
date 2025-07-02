@@ -4,6 +4,8 @@ services:
   # NOTE(powvt): Other validator flags: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth:
     image: ghcr.io/sovanetwork/sova-reth:v0.0.6
+    environment:
+      SOVA_DERIVATION_XPUB: ${SOVA_DERIVATION_XPUB:-}
     command: >
       node
       --chain /config/testnet-sepolia/genesis.json
