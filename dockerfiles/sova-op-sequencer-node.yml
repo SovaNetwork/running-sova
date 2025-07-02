@@ -146,7 +146,7 @@ services:
       start_period: 5s
 
   network-indexer:
-    image: ghcr.io/sovanetwork/network-indexer:v0.1.2
+    image: ghcr.io/sovanetwork/network-indexer:v0.1.4
     environment:
       - RUST_LOG=${RUST_LOG:-info}
       - NETWORK=${NETWORK:-regtest}
@@ -177,7 +177,7 @@ services:
       - socket:/tmp
 
   network-utxos:
-    image: ghcr.io/sovanetwork/network-utxos:v0.1.2
+    image: ghcr.io/sovanetwork/network-utxos:v0.1.4
     environment:
       - RUST_LOG=${RUST_LOG:-info}
       - HOST=${UTXO_HOST:-0.0.0.0}
