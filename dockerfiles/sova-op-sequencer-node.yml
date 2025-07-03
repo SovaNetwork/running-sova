@@ -125,9 +125,8 @@ services:
       retries: 5
   
   network-enclave:
-    image: ghcr.io/sovanetwork/network-enclave:v0.0.6
+    image: ghcr.io/sovanetwork/network-enclave:v0.0.7
     environment:
-      - LOG_LEVEL=${RUST_LOG:-info}
       - BIP32_SEED=${BIP32_SEED}
       - ENCLAVE_API_KEY=${ENCLAVE_SHARED_API_KEY:-}
     ports:
@@ -136,8 +135,12 @@ services:
       --host 0.0.0.0
       --port 5555
       --network ${NETWORK:-regtest}
+      --address-map-path /var/lib/enclave/address_map.bin
+      --log-level ${RUST_LOG:-info}
     networks:
       - sova_network
+    volumes:
+      - enclave-data:/var/lib/enclave
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5555/health"]
       interval: 5s
@@ -289,7 +292,8 @@ networks:
 
 volumes:
   bitcoin-data:
-  sequencer-data:
+  enclave-data:
   sentinel-data:
-  utxo-data:
+  sequencer-data:
   socket:
+  utxo-data:
