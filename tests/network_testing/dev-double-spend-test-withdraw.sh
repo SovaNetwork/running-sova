@@ -50,6 +50,39 @@ btc_to_sats() {
     echo "$1 * 100000000" | bc | cut -d'.' -f1
 }
 
+# Function to find vout index for users SovaBTC deposit address
+find_vout_index() {
+    local tx_hex=$1
+    local target_address=$2
+
+    # Decode transaction and parse the output
+    local decode_output=$(satoshi-suite decode-raw-tx --tx-hex "$tx_hex" 2>/dev/null)
+
+    # Convert target address to uppercase for comparison
+    local target_upper=$(echo "$target_address" | tr '[:lower:]' '[:upper:]')
+
+    # Extract vout entries and find the matching address
+    echo "$decode_output" | awk -v target="$target_upper" '
+        # Track current vout index
+        /n: [0-9]+/ {
+            n_value = $2
+            gsub(/,/, "", n_value)
+        }
+
+        # Check for address match (case insensitive)
+        /Address<NetworkUnchecked>\(/ {
+            address_line = $0
+            gsub(/.*Address<NetworkUnchecked>\(/, "", address_line)
+            gsub(/\).*/, "", address_line)
+
+            if (toupper(address_line) == target) {
+                print n_value
+                exit
+            }
+        }
+    '
+}
+
 # Function to extract transaction hex
 get_tx_hex() {
     local output=$1
@@ -107,6 +140,16 @@ echo "TX2 Hex: $TX2_HEX"
 # Convert 49.999 BTC to satoshis
 AMOUNT_SATS=$(btc_to_sats 49.999)
 
+# Find the vout index for the SovaBTC receive address
+VOUT_INDEX=$(find_vout_index "$TX1_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+
+if [ -z "$VOUT_INDEX" ]; then
+    echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
+    exit 1
+fi
+
+echo "Vout Index: $VOUT_INDEX"
+
 echo "Submitting first transaction to SovaBTC contract (0.001 fee)..."
 cast send \
     --rpc-url "$ETH_RPC_URL" \
@@ -114,9 +157,10 @@ cast send \
     --gas-limit 250000 \
     --chain-id "$CHAIN_ID" \
     "$SOVABTC_CONTRACT_ADDRESS" \
-    "depositBTC(uint64,bytes)" \
+    "depositBTC(uint64,bytes,uint8)" \
     "$AMOUNT_SATS" \
-    "0x$TX1_HEX"
+    "0x$TX1_HEX" \
+    "$VOUT_INDEX"
 
 check_contract_state "After first deposit submission (before finalization)"
 
@@ -145,6 +189,16 @@ echo "Creating new Bitcoin transaction for second VALID deposit..."
 TX3_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" sign-tx --wallet-name "$WALLET_1" --recipient "$SOVABTC_BITCOIN_RECEIVE_ADDRESS" --amount 49.999 --fee-amount 0.001)
 TX3_HEX=$(get_tx_hex "$TX3_OUTPUT")
 
+# Find the vout index for the SovaBTC receive address
+VOUT_INDEX=$(find_vout_index "$TX3_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+
+if [ -z "$VOUT_INDEX" ]; then
+    echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
+    exit 1
+fi
+
+echo "Vout Index: $VOUT_INDEX"
+
 echo "Submitting second deposit to SovaBTC contract..."
 cast send \
     --rpc-url "$ETH_RPC_URL" \
@@ -152,9 +206,10 @@ cast send \
     --gas-limit 250000 \
     --chain-id "$CHAIN_ID" \
     "$SOVABTC_CONTRACT_ADDRESS" \
-    "depositBTC(uint64,bytes)" \
+    "depositBTC(uint64,bytes,uint8)" \
     "$AMOUNT_SATS" \
-    "0x$TX3_HEX"
+    "0x$TX3_HEX" \
+    "$VOUT_INDEX"
 
 check_contract_state "After second deposit submission (before finalization)"
 
