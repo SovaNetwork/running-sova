@@ -62,6 +62,16 @@ echo "TX1 Hex: $TX1_HEX"
 # Convert 49.999 BTC to satoshis
 AMOUNT_SATS=$(btc_to_sats 49.999)
 
+# Find the vout index for the SovaBTC receive address
+VOUT_INDEX=$(find_vout_index "$TX1_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+
+if [ -z "$VOUT_INDEX" ]; then
+    echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
+    exit 1
+fi
+
+echo "Vout Index: $VOUT_INDEX"
+
 echo "Submitting first deposit to  wrapped BTC contract (0.001 fee)..."
 cast send \
     --rpc-url "$ETH_RPC_URL" \
@@ -69,9 +79,10 @@ cast send \
     --gas-limit 250000 \
     --chain-id "$CHAIN_ID" \
     "$UBTC_CONTRACT_ADDRESS" \
-    "depositBTC(uint64,bytes)" \
+    "depositBTC(uint64,bytes,uint8)" \
     "$AMOUNT_SATS" \
-    "0x$TX1_HEX"
+    "0x$TX1_HEX" \
+    "$VOUT_INDEX"
 
 echo "Checking contract state..."
     BALANCE=$(cast call --rpc-url "$ETH_RPC_URL" "$UBTC_CONTRACT_ADDRESS" \
