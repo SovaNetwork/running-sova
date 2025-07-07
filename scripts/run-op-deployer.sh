@@ -61,13 +61,13 @@ docker run --rm -it \
 echo "✅ op-deployer init complete"
 
 # ---------------------
-# Step 2: Overwrite intent.toml with interop config
+# Step 2: Overwrite intent.toml
 # ---------------------
 cat > "$WORKDIR/intent.toml" <<EOF
 configType = "custom"
 l1ChainID = ${L1_CHAIN_ID}
 fundDevAccounts = false
-useInterop = true
+useInterop = false
 l1ContractsLocator = "${ARTIFACTS_URL}"
 l2ContractsLocator = "${ARTIFACTS_URL}"
 
@@ -104,7 +104,7 @@ l2ContractsLocator = "${ARTIFACTS_URL}"
   l2GenesisIsthmusTimeOffset = "0x0"
 EOF
 
-echo "✅ intent.toml overwritten with interop config"
+echo "✅ intent.toml created"
 
 # ---------------------
 # Step 3: Run op-deployer apply
