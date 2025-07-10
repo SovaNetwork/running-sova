@@ -70,22 +70,39 @@ find_vout_index_debug() {
     echo "Address found in output:" >&2
     echo "$decode_output" | grep "$target_upper" >&2
 
-    # Find line number
-    local address_line_num=$(echo "$decode_output" | grep -n "$target_upper" | head -1 | cut -d: -f1)
-    echo "Address line number: $address_line_num" >&2
+    # Find the vout entry that contains our target address
+    # We need to look for the pattern and extract the corresponding n: value
+    local vout_section=$(echo "$decode_output" | sed -n '/vout: \[/,/\]/p')
     
-    if [ -n "$address_line_num" ]; then
-        echo "Lines up to address:" >&2
-        echo "$decode_output" | head -n "$address_line_num" | grep "n: [0-9]" >&2
+    # Split by vout entries and find the one with our address
+    local current_n=""
+    local found_address=false
+    
+    while IFS= read -r line; do
+        # Check if this line contains an n: value
+        if [[ "$line" =~ n:\ ([0-9]+) ]]; then
+            current_n="${BASH_REMATCH[1]}"
+            found_address=false
+        fi
         
-        # Get the result
-        local result=$(echo "$decode_output" | head -n "$address_line_num" | grep "n: [0-9]" | tail -1 | sed 's/.*n: \([0-9]\+\).*/\1/')
-        echo "Final result: $result" >&2
-        echo "$result"
-    else
-        echo "Address not found!" >&2
-    fi
+        # Check if this line contains our target address
+        if [[ "$line" == *"$target_upper"* ]]; then
+            found_address=true
+        fi
+        
+        # If we found the address and have an n value, return it
+        if [[ "$found_address" == true && -n "$current_n" ]]; then
+            echo "Found address at vout index: $current_n" >&2
+            echo "$current_n"
+            echo "=== END DEBUG ===" >&2
+            return 0
+        fi
+        
+    done <<< "$vout_section"
+    
+    echo "Address not found!" >&2
     echo "=== END DEBUG ===" >&2
+    return 1
 }
 
 # Function to extract transaction hex
