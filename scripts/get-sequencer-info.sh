@@ -8,11 +8,11 @@ PEER_ID=$(curl -s -X POST \
   -d '{"jsonrpc":"2.0","method":"opp2p_self","params":[],"id":1}' \
   http://localhost:9545 | jq -r '.result.peerID')
 
-# Get sova-reth enode and extract pubkey
+# Get sova-reth enode and extract pubkey (corrected grep)
 ENODE_PUBKEY=$(docker logs sova-op-testnet-sova-reth-1 2>/dev/null | \
-  grep "enode=" | \
+  grep "enode://" | \
   head -1 | \
-  sed 's/.*enode:\/\/\([a-f0-9]*\)@.*/\1/')
+  sed 's/.*enode:\/\/\([a-f0-9A-F]*\)@.*/\1/')
 
 # Get public IP
 PUBLIC_IP=$(curl -s ifconfig.me)
