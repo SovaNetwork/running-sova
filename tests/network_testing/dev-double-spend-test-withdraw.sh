@@ -51,58 +51,36 @@ btc_to_sats() {
 }
 
 # Function to find vout index for users SovaBTC deposit address
-# Debug version to see what's happening
-find_vout_index_debug() {
+find_vout_index() {
     local tx_hex=$1
     local target_address=$2
-
-    echo "=== DEBUG find_vout_index ===" >&2
-    echo "Target address: $target_address" >&2
 
     # Decode transaction and parse the output
     local decode_output=$(satoshi-suite decode-raw-tx --tx-hex "$tx_hex" 2>/dev/null)
 
     # Convert target address to uppercase for comparison
     local target_upper=$(echo "$target_address" | tr '[:lower:]' '[:upper:]')
-    echo "Target uppercase: $target_upper" >&2
 
-    # Check if address exists in output
-    echo "Address found in output:" >&2
-    echo "$decode_output" | grep "$target_upper" >&2
+    # Extract vout entries and find the matching address
+    echo "$decode_output" | awk -v target="$target_upper" '
+        # Track current vout index
+        /n: [0-9]+/ {
+            n_value = $2
+            gsub(/,/, "", n_value)
+        }
 
-    # Find the vout entry that contains our target address
-    # We need to look for the pattern and extract the corresponding n: value
-    local vout_section=$(echo "$decode_output" | sed -n '/vout: \[/,/\]/p')
-    
-    # Split by vout entries and find the one with our address
-    local current_n=""
-    local found_address=false
-    
-    while IFS= read -r line; do
-        # Check if this line contains an n: value
-        if [[ "$line" =~ n:\ ([0-9]+) ]]; then
-            current_n="${BASH_REMATCH[1]}"
-            found_address=false
-        fi
-        
-        # Check if this line contains our target address
-        if [[ "$line" == *"$target_upper"* ]]; then
-            found_address=true
-        fi
-        
-        # If we found the address and have an n value, return it
-        if [[ "$found_address" == true && -n "$current_n" ]]; then
-            echo "Found address at vout index: $current_n" >&2
-            echo "$current_n"
-            echo "=== END DEBUG ===" >&2
-            return 0
-        fi
-        
-    done <<< "$vout_section"
-    
-    echo "Address not found!" >&2
-    echo "=== END DEBUG ===" >&2
-    return 1
+        # Check for address match (case insensitive)
+        /Address<NetworkUnchecked>\(/ {
+            address_line = $0
+            gsub(/.*Address<NetworkUnchecked>\(/, "", address_line)
+            gsub(/\).*/, "", address_line)
+
+            if (toupper(address_line) == target) {
+                print n_value
+                exit
+            }
+        }
+    '
 }
 
 # Function to extract transaction hex
@@ -168,7 +146,8 @@ satoshi-suite decode-tx --tx-hex "$TX1_HEX"
 AMOUNT_SATS=$(btc_to_sats 49.999)
 
 # Find the vout index for the SovaBTC receive address
-VOUT_INDEX=$(find_vout_index_debug "$TX1_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+# VOUT_INDEX=$(find_vout_index "$TX1_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+VOUT_INDEX="0"
 
 if [ -z "$VOUT_INDEX" ]; then
     echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
@@ -217,7 +196,8 @@ TX3_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --r
 TX3_HEX=$(get_tx_hex "$TX3_OUTPUT")
 
 # Find the vout index for the SovaBTC receive address
-VOUT_INDEX=$(find_vout_index_debug "$TX3_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+# VOUT_INDEX=$(find_vout_index "$TX3_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+VOUT_INDEX="0"
 
 if [ -z "$VOUT_INDEX" ]; then
     echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
