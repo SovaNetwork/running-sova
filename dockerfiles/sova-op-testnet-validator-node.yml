@@ -49,8 +49,6 @@ services:
       - validator-data:/var/lib/sova
       - ../config:/config
     depends_on:
-      bitcoin-regtest:
-      sova-reth:
       sentinel-server-validator:
         condition: service_started
     profiles: [core]
@@ -75,8 +73,6 @@ services:
       - sova_network  # Connect to sequencer network
     volumes:
       - validator-sentinel-data:/app/data
-    depends_on:
-      bitcoin-regtest:
     profiles: [core]
   
   # OP Stack components

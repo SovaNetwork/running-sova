@@ -48,10 +48,10 @@ docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-aux-ser
 
 ```bash
 # run Sova OP validator
-docker-compose -f dockerfiles/sova-op-testnet-validator-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env up --build -d
+docker-compose -f dockerfiles/sova-op-testnet-validator-node.yml -p sova-op-testnet-validator --profile core --profile op-stack --env-file ./.env up --build -d
 
 # remove all containers and volumes with:
-docker-compose -f dockerfiles/sova-op-testnet-validator-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env down -v --rmi all
+docker-compose -f dockerfiles/sova-op-testnet-validator-node.yml -p sova-op-testnet-validator --profile core --profile op-stack --env-file ./.env down -v --rmi all
 ```
 
 ## Chain Config
