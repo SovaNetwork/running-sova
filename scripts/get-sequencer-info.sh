@@ -9,7 +9,10 @@ PEER_ID=$(curl -s -X POST \
   http://localhost:9545 | jq -r '.result.peerID')
 
 # Get sova-reth enode and extract pubkey
-ENODE_PUBKEY=$(docker logs sova-op-testnet-sova-reth-1 2>/dev/null | grep "enode=" | tail -1 | sed 's/.*enode:\/\/\([^@]*\)@.*/\1/')
+ENODE_PUBKEY=$(docker logs sova-op-testnet-sova-reth-1 2>/dev/null | \
+  grep "enode=" | \
+  head -1 | \
+  sed 's/.*enode:\/\/\([a-f0-9]*\)@.*/\1/')
 
 # Get public IP
 PUBLIC_IP=$(curl -s ifconfig.me)
