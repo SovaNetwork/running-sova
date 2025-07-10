@@ -102,16 +102,10 @@ services:
     volumes:
       - bitcoin-data:/home/bitcoin/.bitcoin
     healthcheck:
-      test: [
-        "CMD",
-        "sh",
-        "-c",
-        "bitcoin-cli -regtest -rpcuser=user -rpcpassword=password getblockchaininfo && if [ $(bitcoin-cli -regtest -rpcuser=user -rpcpassword=password getblockcount) -eq 0 ]; then bitcoin-cli -regtest -rpcuser=user -rpcpassword=password generatetoaddress 1 bcrt1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh; fi"
-      ]
-      interval: 5s
+      test: ["CMD", "bitcoin-cli", "-regtest", "-rpcuser=user", "-rpcpassword=password", "getblockchaininfo"]
+      interval: 10s
       timeout: 10s
       retries: 3
-      start_period: 30s
     profiles: [core]
   
   network-enclave:
