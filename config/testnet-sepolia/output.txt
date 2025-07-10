@@ -1,175 +1,182 @@
 ➜  running-sova git:(main) ✗ ./scripts/run-op-deployer.sh
+📋 Found existing keys file: /Users/powvt/running-sova/config/testnet-sepolia/generated-keys.env
+Loading existing generated addresses...
+✅ Using existing generated addresses
+🚀 OP Stack Deployment Configuration
+====================================
+L1 Chain ID: 11155111
+L2 Chain ID: 120893
+Work Directory: /Users/powvt/running-sova/config/testnet-sepolia
+
+Superchain Admin Roles (using ADMIN_ADDR):
+  SuperchainProxyAdminOwner: 0x1844FE9b38db61803E089Ce6dAB413eF650F16BF
+  SuperchainGuardian: 0x1844FE9b38db61803E089Ce6dAB413eF650F16BF
+  ProtocolVersionsOwner: 0x1844FE9b38db61803E089Ce6dAB413eF650F16BF
+  L1ProxyAdminOwner: 0x1844FE9b38db61803E089Ce6dAB413eF650F16BF
+
+Unique Role Addresses:
+  Batcher: 0xe8d07a89FAe1E88b7306DdEe906fab5B79a84F29
+  Proposer: 0xE6FED48ACe2d18a628Fa48cA7d44b3580e0fef24
+  Challenger: 0x64E4Ae5A28BaD426455f476f0AeC26728C83c21A
+  L2ProxyAdminOwner: 0xA74880099580d451A11a811462F6B0f705389F8b
+  SystemConfigOwner: 0x5078e08612856D96107A699a4CB570c2f113BA2E
+  UnsafeBlockSigner: 0xC0B8A7838c85fFc4433863D9ECd96730b7BDFfd1
+  BaseFeeVaultRecipient: 0xE2a5c2333DFa8F8822b852329E531C10069FDc99
+  L1FeeVaultRecipient: 0x449d5717193C01B24a4b5BB0381eFf81d8C0D479
+  SequencerFeeVaultRecipient: 0xDf4873267847ee5182c357493087aD5723457a11
+
+Step 1: Initializing op-deployer...
 Successfully initialized op-deployer intent in directory: /Users/powvt/running-sova/config/testnet-sepolia
 ✅ op-deployer init complete
-✅ intent.toml overwritten with interop config
- 100% |████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| (244/244 MB, 74 MB/s)        
-INFO [06-20|19:25:14.755] Initialized path database                readonly=true cache=0.00B buffer=0.00B history=0
-INFO [06-20|19:25:14.756] initializing pipeline                    stage=init strategy=live
-INFO [06-20|19:25:14.902] deploying superchain                     stage=deploy-superchain
-INFO [06-20|19:25:18.074] transaction broadcasted                  id=f7d315..b0704c nonce=115
-INFO [06-20|19:25:18.075] Publishing transaction                   service=transactor tx=b32932..0ed329 nonce=115 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=2,967,074
-INFO [06-20|19:25:18.174] Transaction successfully published       service=transactor tx=b32932..0ed329 nonce=115 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=2,967,074 tx=b32932..0ed329
-INFO [06-20|19:25:18.362] transaction broadcasted                  id=69c62d..54a526 nonce=116
-INFO [06-20|19:25:18.362] Publishing transaction                   service=transactor tx=3c7c9c..371fdb nonce=116 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464
-INFO [06-20|19:25:18.428] Transaction successfully published       service=transactor tx=3c7c9c..371fdb nonce=116 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464 tx=3c7c9c..371fdb
-INFO [06-20|19:25:18.555] transaction broadcasted                  id=d59dde..a45c5f nonce=117
-INFO [06-20|19:25:18.556] Publishing transaction                   service=transactor tx=754389..0a6b1f nonce=117 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=174,272
-INFO [06-20|19:25:18.629] Transaction successfully published       service=transactor tx=754389..0a6b1f nonce=117 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=174,272 tx=754389..0a6b1f
-INFO [06-20|19:25:18.752] transaction broadcasted                  id=113263..521480 nonce=118
-INFO [06-20|19:25:18.752] Publishing transaction                   service=transactor tx=aa1ba5..bdadf2 nonce=118 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464
-INFO [06-20|19:25:18.832] Transaction successfully published       service=transactor tx=aa1ba5..bdadf2 nonce=118 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464 tx=aa1ba5..bdadf2
-INFO [06-20|19:25:18.961] transaction broadcasted                  id=d94659..bfffd6 nonce=119
-INFO [06-20|19:25:18.961] Publishing transaction                   service=transactor tx=b5a0fe..a95db4 nonce=119 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=322,468
-INFO [06-20|19:25:19.030] Transaction successfully published       service=transactor tx=b5a0fe..a95db4 nonce=119 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=322,468 tx=b5a0fe..a95db4
-INFO [06-20|19:25:19.166] transaction broadcasted                  id=bce023..158ec7 nonce=120
-INFO [06-20|19:25:19.166] Publishing transaction                   service=transactor tx=a0d3c7..375bfc nonce=120 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=51524
-INFO [06-20|19:25:19.232] Transaction successfully published       service=transactor tx=a0d3c7..375bfc nonce=120 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=51524 tx=a0d3c7..375bfc
-INFO [06-20|19:25:27.161] Transaction confirmed                    service=transactor tx=b5a0fe..a95db4 block=4de499..4731ee:8592081 effectiveGasPrice=1,000,016,454
-INFO [06-20|19:25:27.315] Transaction confirmed                    service=transactor tx=b32932..0ed329 block=4de499..4731ee:8592081 effectiveGasPrice=1,000,016,454
-INFO [06-20|19:25:27.315] transaction confirmed                    id=f7d315..b0704c completed=1 total=6 hash=0xb329327dd8f0c5718090ba35f6bfa4d5b2ca75fe1b16d19ad493dbdbb90ed329 nonce=115 creation=0x4BD7c199e91e83D631262D900a207759ccEFE905
-INFO [06-20|19:25:27.414] Transaction confirmed                    service=transactor tx=a0d3c7..375bfc block=4de499..4731ee:8592081 effectiveGasPrice=1,000,016,454
-INFO [06-20|19:25:27.572] Transaction confirmed                    service=transactor tx=3c7c9c..371fdb block=4de499..4731ee:8592081 effectiveGasPrice=1,000,016,454
-INFO [06-20|19:25:27.572] transaction confirmed                    id=69c62d..54a526 completed=2 total=6 hash=0x3c7c9c6c3e681cae9d123d7f975f25184086777a7354029ae334d62ac0371fdb nonce=116 creation=0x94f788D5753fe68b0AEFFDdB2cCEE29e8984397C
-INFO [06-20|19:25:27.795] Transaction confirmed                    service=transactor tx=754389..0a6b1f block=4de499..4731ee:8592081 effectiveGasPrice=1,000,016,454
-INFO [06-20|19:25:27.795] transaction confirmed                    id=d59dde..a45c5f completed=3 total=6 hash=0x7543896a5a0b64904a5e73dfddfeb8d84346f50aa2c0a93ddc797f7b020a6b1f nonce=117 creation=0x0000000000000000000000000000000000000000
-INFO [06-20|19:25:27.995] Transaction confirmed                    service=transactor tx=aa1ba5..bdadf2 block=4de499..4731ee:8592081 effectiveGasPrice=1,000,016,454
-INFO [06-20|19:25:27.995] transaction confirmed                    id=113263..521480 completed=4 total=6 hash=0xaa1ba50f9fb7f9949cf742911642923c80342ce9787d6e64832dee34c8bdadf2 nonce=118 creation=0x6fF9061A3aB3B3C727c0EB8d19718D6C7c2Fa0eB
-INFO [06-20|19:25:27.995] transaction confirmed                    id=d94659..bfffd6 completed=5 total=6 hash=0xb5a0fe0823a9ebda79a71df04de7c188e041561dfde7e896f3caa0e76ba95db4 nonce=119 creation=0x0000000000000000000000000000000000000000
-INFO [06-20|19:25:27.995] transaction confirmed                    id=bce023..158ec7 completed=6 total=6 hash=0xa0d3c71eb13500fb17cd060b5757fc9dc058e9d2512283c184e1389850375bfc nonce=120 creation=0x0000000000000000000000000000000000000000
-INFO [06-20|19:25:27.998] deploying implementations                stage=deploy-implementations
-INFO [06-20|19:25:36.050] transaction broadcasted                  id=536147..ec5f97 nonce=0
-INFO [06-20|19:25:36.050] Publishing transaction                   service=transactor tx=5d97b5..68fbe9 nonce=121 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=4,036,534
-INFO [06-20|19:25:36.172] Transaction successfully published       service=transactor tx=5d97b5..68fbe9 nonce=121 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=4,036,534 tx=5d97b5..68fbe9
-INFO [06-20|19:25:50.333] Transaction confirmed                    service=transactor tx=5d97b5..68fbe9 block=e2feb7..cc66cb:8592083 effectiveGasPrice=1,000,015,304
-INFO [06-20|19:25:50.333] transaction confirmed                    id=536147..ec5f97 completed=1 total=1 hash=0x5d97b5d2f57dbd56dd0cb532553a73ce3106482144b89e51437295edde68fbe9 nonce=0   creation=0x0000000000000000000000000000000000000000
-INFO [06-20|19:25:50.337] deploying OP chain using local allocs    stage=deploy-opchain id=0x000000000000000000000000000000000000000000000000000000000001d83d
-WARN [06-20|19:26:01.213] Fault                                    addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 label=anchorStateRegistryProxy err="execution reverted" depth=3
-WARN [06-20|19:26:01.213] callframe                                depth=1 byte4=0xfc4dcacb addr=0x44476a72FaF563c0e2438C6263184d35EC2CA186 callsite= label=DeployOPChain
-WARN [06-20|19:26:01.213] callframe                                depth=2 byte4=0x38d38c97 addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 callsite= label=anchorStateRegistryProxy
-WARN [06-20|19:26:01.213] callframe                                depth=3 byte4=0x38d38c97 addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 callsite= label=anchorStateRegistryProxy
-WARN [06-20|19:26:01.213] Revert                                   addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 label=anchorStateRegistryProxy err="execution reverted" revertData=0x depth=2
-WARN [06-20|19:26:01.213] Fault                                    addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 label=anchorStateRegistryProxy err="execution reverted" depth=2
-WARN [06-20|19:26:01.214] callframe                                depth=1 byte4=0xfc4dcacb addr=0x44476a72FaF563c0e2438C6263184d35EC2CA186 callsite= label=DeployOPChain
-WARN [06-20|19:26:01.214] callframe                                depth=2 byte4=0x38d38c97 addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 callsite= label=anchorStateRegistryProxy
-WARN [06-20|19:26:01.214] Revert                                   addr=0x3A905b09B5Bf9996C2D3e54336f0DEe457c99315 label=anchorStateRegistryProxy err="execution reverted" revertData=0x depth=1
-WARN [06-20|19:26:01.286] Fault                                    addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 label=disputeGameFactoryProxy  err="execution reverted" depth=3
-WARN [06-20|19:26:01.286] callframe                                depth=1 byte4=0xfc4dcacb addr=0x44476a72FaF563c0e2438C6263184d35EC2CA186 callsite= label=DeployOPChain
-WARN [06-20|19:26:01.286] callframe                                depth=2 byte4=0x38d38c97 addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 callsite= label=disputeGameFactoryProxy
-WARN [06-20|19:26:01.286] callframe                                depth=3 byte4=0x38d38c97 addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 callsite= label=disputeGameFactoryProxy
-WARN [06-20|19:26:01.286] Revert                                   addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 label=disputeGameFactoryProxy  err="execution reverted" revertData=0x depth=2
-WARN [06-20|19:26:01.286] Fault                                    addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 label=disputeGameFactoryProxy  err="execution reverted" depth=2
-WARN [06-20|19:26:01.286] callframe                                depth=1 byte4=0xfc4dcacb addr=0x44476a72FaF563c0e2438C6263184d35EC2CA186 callsite= label=DeployOPChain
-WARN [06-20|19:26:01.286] callframe                                depth=2 byte4=0x38d38c97 addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 callsite= label=disputeGameFactoryProxy
-WARN [06-20|19:26:01.286] Revert                                   addr=0x6d3837A4eF883ac69C64328499D1bB94FcEa5751 label=disputeGameFactoryProxy  err="execution reverted" revertData=0x depth=1
-WARN [06-20|19:26:01.288] Fault                                    addr=0xD82d769c132878928318748C75c6446462777E8d label=optimismMintableERC20FactoryProxy err="execution reverted" depth=3
-WARN [06-20|19:26:01.288] callframe                                depth=1 byte4=0xfc4dcacb addr=0x44476a72FaF563c0e2438C6263184d35EC2CA186 callsite= label=DeployOPChain
-WARN [06-20|19:26:01.288] callframe                                depth=2 byte4=0x38d38c97 addr=0xD82d769c132878928318748C75c6446462777E8d callsite= label=optimismMintableERC20FactoryProxy
-WARN [06-20|19:26:01.288] callframe                                depth=3 byte4=0x38d38c97 addr=0xD82d769c132878928318748C75c6446462777E8d callsite= label=optimismMintableERC20FactoryProxy
-WARN [06-20|19:26:01.288] Revert                                   addr=0xD82d769c132878928318748C75c6446462777E8d label=optimismMintableERC20FactoryProxy err="execution reverted" revertData=0x depth=2
-WARN [06-20|19:26:01.288] Fault                                    addr=0xD82d769c132878928318748C75c6446462777E8d label=optimismMintableERC20FactoryProxy err="execution reverted" depth=2
-WARN [06-20|19:26:01.288] callframe                                depth=1 byte4=0xfc4dcacb addr=0x44476a72FaF563c0e2438C6263184d35EC2CA186 callsite= label=DeployOPChain
-WARN [06-20|19:26:01.288] callframe                                depth=2 byte4=0x38d38c97 addr=0xD82d769c132878928318748C75c6446462777E8d callsite= label=optimismMintableERC20FactoryProxy
-WARN [06-20|19:26:01.288] Revert                                   addr=0xD82d769c132878928318748C75c6446462777E8d label=optimismMintableERC20FactoryProxy err="execution reverted" revertData=0x depth=1
-INFO [06-20|19:26:02.337] transaction broadcasted                  id=d6736f..60299b nonce=122
-INFO [06-20|19:26:02.338] Publishing transaction                   service=transactor tx=e2d513..25219e nonce=122 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=26,108,236
-INFO [06-20|19:26:02.450] Transaction successfully published       service=transactor tx=e2d513..25219e nonce=122 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=26,108,236 tx=e2d513..25219e
-INFO [06-20|19:26:14.592] Transaction confirmed                    service=transactor tx=e2d513..25219e block=cf58b9..ffbc84:8592085 effectiveGasPrice=1,000,013,056
-INFO [06-20|19:26:14.593] transaction confirmed                    id=d6736f..60299b completed=1 total=1 hash=0xe2d513722905f144fbc7364905c351aeda125f9d81bbcfacfe5f478aa325219e nonce=122 creation=0x0000000000000000000000000000000000000000
-INFO [06-20|19:26:14.595] alt-da deployment not needed             stage=deploy-alt-da
-INFO [06-20|19:26:14.597] additional dispute games deployment not needed stage=deploy-additional-dispute-games
-INFO [06-20|19:26:14.600] generating L2 genesis                    stage=generate-l2-genesis id=0x000000000000000000000000000000000000000000000000000000000001d83d
-WARN [06-20|19:26:14.601] RequiredProtocolVersion is empty         "!BADKEY"=&{} config=SuperchainL1DeployConfig
-WARN [06-20|19:26:14.601] RecommendedProtocolVersion is empty      "!BADKEY"=&{} config=SuperchainL1DeployConfig
-WARN [06-20|19:26:14.601] L2OutputOracleStartingBlockNumber is 0, should only be 0 for fresh chains "!BADKEY"=&{} config=OutputOracleDeployConfig
-INFO [06-20|19:26:14.645] L2Genesis: outputMode: none, fork: isthmus sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.645] Setting precompile 1 wei balances        sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.646] Setting Predeploy proxies                sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.648] Setting proxy deployed bytecode for addresses in range 0x4200000000000000000000000000000000000000 through 0x42000000000000000000000000000000000007fF sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.648] Setting proxy 0x4200000000000000000000000000000000000000 implementation: 0xc0D3C0d3C0d3C0D3c0d3C0d3c0D3C0d3c0d30000 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000002 implementation: 0xc0d3c0d3C0d3c0D3c0d3C0D3c0d3C0d3c0D30002 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Skipping proxy at 0x4200000000000000000000000000000000000006 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000007 implementation: 0xC0d3c0d3c0D3c0D3C0d3C0D3C0D3c0d3c0d30007 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x420000000000000000000000000000000000000F implementation: 0xc0d3C0d3C0d3c0D3C0D3C0d3C0d3C0D3C0D3000f sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000010 implementation: 0xC0d3c0d3c0D3c0d3C0D3c0D3C0d3C0D3C0D30010 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000011 implementation: 0xC0D3C0d3c0d3c0d3C0D3c0d3C0D3c0d3c0D30011 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000012 implementation: 0xc0D3c0d3C0d3c0d3c0D3c0d3c0D3c0D3c0D30012 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000013 implementation: 0xC0D3C0d3C0D3c0D3C0d3c0D3C0d3c0d3C0d30013 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.649] Setting proxy 0x4200000000000000000000000000000000000014 implementation: 0xC0D3c0d3c0d3c0d3c0D3C0d3C0D3C0D3c0d30014 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000015 implementation: 0xc0d3C0D3C0D3c0D3C0D3C0d3C0D3c0D3c0d30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000016 implementation: 0xC0D3C0d3C0d3c0d3C0d3C0D3c0D3c0d3c0D30016 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000017 implementation: 0xc0d3C0d3C0d3C0d3C0d3c0d3C0D3C0d3C0D30017 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000018 implementation: 0xC0d3C0D3c0d3C0d3c0d3c0D3C0D3C0d3C0D30018 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000019 implementation: 0xC0d3c0D3c0d3C0D3C0D3C0d3c0D3C0D3c0d30019 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x420000000000000000000000000000000000001A implementation: 0xc0D3c0D3C0d3c0d3c0d3C0d3c0d3C0d3C0D3001A sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x420000000000000000000000000000000000001b implementation: 0xC0d3C0d3c0D3C0d3C0d3c0D3C0d3c0D3C0d3001B sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000020 implementation: 0xc0d3c0d3c0d3C0d3c0d3C0D3C0D3c0d3C0D30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000021 implementation: 0xC0D3c0D3C0d3c0D3c0D3C0D3c0D3c0d3c0d30021 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.650] Setting proxy 0x4200000000000000000000000000000000000022 implementation: 0xC0D3C0d3C0D3C0d3c0d3c0D3c0D3C0d3C0D30022 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.651] Setting proxy 0x4200000000000000000000000000000000000023 implementation: 0xC0D3c0D3C0d3C0D3C0D3c0D3c0d3C0d3C0d30023 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.651] Setting proxy 0x4200000000000000000000000000000000000024 implementation: 0xC0d3c0d3C0D3C0d3c0d3c0D3C0D3c0D3c0D30024 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.651] Setting proxy 0x4200000000000000000000000000000000000025 implementation: 0xc0d3C0D3C0D3c0d3c0d3C0D3C0D3C0d3C0d30025 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.651] Setting proxy 0x4200000000000000000000000000000000000028 implementation: 0xC0d3c0d3C0d3c0d3c0d3C0d3c0d3c0d3c0d30028 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.652] Skipping proxy at 0x4200000000000000000000000000000000000042 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.730] Setting Sova Predeploy proxies           sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] Setting up Sova proxy at 0x2100000000000000000000000000000000000015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] Setting proxy 0x2100000000000000000000000000000000000015 implementation: 0xc1D3C0D3C0d3c0D3c0D3c0D3c0d3c0D3C0D30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] Setting up Sova proxy at 0x2100000000000000000000000000000000000020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] Setting proxy 0x2100000000000000000000000000000000000020 implementation: 0xc1D3c0D3C0D3c0d3c0D3c0d3C0d3C0D3C0D30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] Setting predeploy implementations with L1 contract dependencies: sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] - L1CrossDomainMessengerProxy: 0xAD0A44A6B5EfDf0883097033060847b13E7F72D0 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] - L1StandardBridgeProxy: 0xb30dFb4fcE9f4b85BAcb1fb980Ce96F6c41eBB0C sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] - L1ERC721BridgeProxy: 0x8c5e9B24DaeB595aADA56938a600b26e977070cb sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.731] Setting LegacyMessagePasser implementation at: 0xc0D3C0d3C0d3C0D3c0d3C0d3c0D3C0d3c0d30000 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.732] Setting DeployerWhitelist implementation at: 0xc0d3c0d3C0d3c0D3c0d3C0D3c0d3C0d3c0D30002 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.732] Setting WETH implementation at: 0x4200000000000000000000000000000000000006 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.734] Setting L2CrossDomainMessenger implementation at: 0xC0d3c0d3c0D3c0D3C0d3C0D3C0D3c0d3c0d30007 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.737] Setting GasPriceOracle implementation at: 0xc0d3C0d3C0d3c0D3C0D3C0d3C0d3C0D3C0D3000f sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.741] Setting L2StandardBridge implementation at: 0xC0d3c0d3c0D3c0d3C0D3c0D3C0d3C0D3C0D30010 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.752] Setting SequencerFeeVault implementation at: 0xC0D3C0d3c0d3c0d3C0D3c0d3C0D3c0d3c0D30011 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.752] Setting OptimismMintableERC20Factory implementation at: 0xc0D3c0d3C0d3c0d3c0D3c0d3c0D3c0D3c0D30012 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.761] Setting L1BlockNumber implementation at: 0xC0D3C0d3C0D3c0D3C0d3c0D3C0d3c0d3C0d30013 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.762] Setting L2ERC721Bridge implementation at: 0xC0D3c0d3c0d3c0d3c0D3C0d3C0D3C0D3c0d30014 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.765] Setting L1Block implementation at: 0xc0d3C0D3C0D3c0D3C0D3C0d3C0D3c0D3c0d30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.766] Setting L2ToL1MessagePasser implementation at: 0xC0D3C0d3C0d3c0d3C0d3C0D3c0D3c0d3c0D30016 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.771] Setting OptimismMintableERC721Factory implementation at: 0xc0d3C0d3C0d3C0d3C0d3c0d3C0D3C0d3C0D30017 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.771] Setting ProxyAdmin implementation at: 0xC0d3C0D3c0d3C0d3c0d3c0D3C0D3C0d3C0D30018 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.774] Setting BaseFeeVault implementation at: 0xC0d3c0D3c0d3C0D3C0D3C0d3c0D3C0D3c0d30019 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.775] Setting L1FeeVault implementation at: 0xc0D3c0D3C0d3c0d3c0d3C0d3c0d3C0d3C0D3001A sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.777] Setting OperatorFeeVault implementation at: 0xC0d3C0d3c0D3C0d3C0d3c0D3C0d3c0D3C0d3001B sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.777] Setting SchemaRegistry implementation at: 0xc0d3c0d3c0d3C0d3c0d3C0D3C0D3c0d3C0D30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.786] Setting EAS implementation at: 0xC0D3c0D3C0d3c0D3c0D3C0D3c0D3c0d3c0d30021 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.786] Governance not enabled, skipping setting governanace token sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.786] Setting CrossL2Inbox implementation at: 0xC0D3C0d3C0D3C0d3c0d3c0D3c0D3C0d3C0D30022 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.787] Setting L2ToL2CrossDomainMessenger implementation at: 0xC0D3c0D3C0d3C0D3C0D3c0D3c0d3C0d3C0d30023 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.791] Setting SuperchainETHBridge implementation at: 0xC0d3c0d3C0D3C0d3c0d3c0D3C0D3c0D3c0D30024 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.792] Setting ETHLiquidity implementation at: 0xc0d3C0D3C0D3c0d3c0d3C0D3C0D3C0d3C0d30025 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.793] Setting SuperchainTokenBridge implementation at: 0xC0d3c0d3C0d3c0d3c0d3C0d3c0d3c0d3c0d30028 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.795] Setting SovaL1Block implementation at: 0xc1D3C0D3C0d3c0D3c0D3c0D3c0d3c0D3C0D30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.796] Setting UBTC implementation at: 0xc1D3c0D3C0D3c0d3c0D3c0d3C0d3C0D3C0D30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.821] Setting MultiCall3 preinstall code at: 0xcA11bde05977b3631167028862bE2a173976CA11 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.821] Setting Create2Deployer preinstall code at: 0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.821] Setting Safe_v130 preinstall code at: 0x69f4D1788e39c87893C980c06EdF4b7f686e2938 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.821] Setting SafeL2_v130 preinstall code at: 0xfb1bffC9d739B8D520DaF37dF666da4C687191EA sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting MultiSendCallOnly_v130 preinstall code at: 0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting SafeSingletonFactory preinstall code at: 0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting DeterministicDeploymentProxy preinstall code at: 0x4e59b44847b379578588920cA78FbF26c0B4956C sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting MultiSend_v130 preinstall code at: 0x998739BFdAAdde7C933B942a68053933098f9EDa sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting Permit2 preinstall code at: 0x000000000022D473030F116dDEE9F6B43aC78BA3 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting SenderCreator_v060 preinstall code at: 0x7fc98430eAEdbb6070B35B39D798725049088348 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting EntryPoint_v060 preinstall code at: 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting SenderCreator_v070 preinstall code at: 0xEFC2c1444eBCC4Db75e7613d20C6a62fF67A167C sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.822] Setting EntryPoint_v070 preinstall code at: 0x0000000071727De22E5E9d8BAf0edAc6f37da032 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.823] Setting BeaconBlockRoots preinstall code at: 0x000F3df6D732807Ef1319fB7B8bB8522d0Beac02 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.823] Setting HistoryStorage preinstall code at: 0x0000F90827F1C53a10cb7A02335B175320002935 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.823] Setting CreateX preinstall code at: 0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
-INFO [06-20|19:26:14.823] Activating ecotone in GasPriceOracle contract sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.823] Activating fjord in GasPriceOracle contract sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.823] Activating isthmus in GasPriceOracle contract sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
-INFO [06-20|19:26:14.846] Trie dumping started                     root=f67424..63dd10
-INFO [06-20|19:26:14.855] Trie dumping complete                    accounts=2351 elapsed=8.526ms
-INFO [06-20|19:26:14.855] removing script from state-dump          addr=0xfdAf657f7146c1AB9db4d70cEd5FDEa7dC4906c0 label=L2Genesis
-INFO [06-20|19:26:14.855] removing script from state-dump          addr=0x8f0818c1e0a4cA9Bc005f61428f7f8a371464D38 label=
-INFO [06-20|19:26:14.970] setting start block                      stage=set-start-block strategy=live id=0x000000000000000000000000000000000000000000000000000000000001d83d
-INFO [06-20|19:26:15.149] rendering the interop dependency set...  stage=generate-interop-depset
-WARN [06-20|19:26:15.369] preStateBuilder not found - skipping prestate generation stage=generate-pre-state
+Step 2: Creating intent.toml...
+✅ intent.toml created
+Step 3: Deploying contracts...
+ 100% |████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| (64/64 MB, 52 MB/s)        
+INFO [07-09|21:18:40.411] Initialized path database                readonly=true cache=0.00B buffer=0.00B history=0
+INFO [07-09|21:18:40.415] initializing pipeline                    stage=init strategy=live
+INFO [07-09|21:18:40.563] deploying superchain                     stage=deploy-superchain
+INFO [07-09|21:18:43.738] transaction broadcasted                  id=d55ad3..e43f16 nonce=163
+INFO [07-09|21:18:43.740] Publishing transaction                   service=transactor tx=c3cca8..29ce36 nonce=163 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=2,967,074
+INFO [07-09|21:18:43.819] Transaction successfully published       service=transactor tx=c3cca8..29ce36 nonce=163 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=2,967,074 tx=c3cca8..29ce36
+INFO [07-09|21:18:43.936] transaction broadcasted                  id=05bd0e..e7e3ae nonce=164
+INFO [07-09|21:18:43.936] Publishing transaction                   service=transactor tx=082aef..80ff0e nonce=164 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464
+INFO [07-09|21:18:43.997] Transaction successfully published       service=transactor tx=082aef..80ff0e nonce=164 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464 tx=082aef..80ff0e
+INFO [07-09|21:18:44.156] transaction broadcasted                  id=24aa38..5c85d7 nonce=165
+INFO [07-09|21:18:44.156] Publishing transaction                   service=transactor tx=0a4764..caff5c nonce=165 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=219,234
+INFO [07-09|21:18:44.224] Transaction successfully published       service=transactor tx=0a4764..caff5c nonce=165 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=219,234 tx=0a4764..caff5c
+INFO [07-09|21:18:44.350] transaction broadcasted                  id=e71c0d..4e21d2 nonce=166
+INFO [07-09|21:18:44.351] Publishing transaction                   service=transactor tx=52ac0a..fe8c2e nonce=166 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464
+INFO [07-09|21:18:44.415] Transaction successfully published       service=transactor tx=52ac0a..fe8c2e nonce=166 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=1,049,464 tx=52ac0a..fe8c2e
+INFO [07-09|21:18:44.556] transaction broadcasted                  id=9ca7a3..12bf3c nonce=167
+INFO [07-09|21:18:44.557] Publishing transaction                   service=transactor tx=c46cb2..383c1e nonce=167 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=322,468
+INFO [07-09|21:18:44.621] Transaction successfully published       service=transactor tx=c46cb2..383c1e nonce=167 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=322,468 tx=c46cb2..383c1e
+INFO [07-09|21:18:44.760] transaction broadcasted                  id=d17385..ea84e8 nonce=168
+INFO [07-09|21:18:44.760] Publishing transaction                   service=transactor tx=50be6d..508ade nonce=168 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=57124
+INFO [07-09|21:18:44.825] Transaction successfully published       service=transactor tx=50be6d..508ade nonce=168 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=57124 tx=50be6d..508ade
+INFO [07-09|21:18:48.554] Transaction confirmed                    service=transactor tx=52ac0a..fe8c2e block=a75dc7..7fec2b:8729040 effectiveGasPrice=1,000,401,808
+INFO [07-09|21:18:48.753] Transaction confirmed                    service=transactor tx=c46cb2..383c1e block=a75dc7..7fec2b:8729040 effectiveGasPrice=1,000,401,808
+INFO [07-09|21:18:48.956] Transaction confirmed                    service=transactor tx=50be6d..508ade block=a75dc7..7fec2b:8729040 effectiveGasPrice=1,000,401,808
+INFO [07-09|21:18:48.959] Transaction confirmed                    service=transactor tx=c3cca8..29ce36 block=a75dc7..7fec2b:8729040 effectiveGasPrice=1,000,401,808
+INFO [07-09|21:18:48.959] transaction confirmed                    id=d55ad3..e43f16 completed=1 total=6 hash=0xc3cca8f83d84cc58f4506d84ca0deca2b053e86151b339d829ffd5265229ce36 nonce=163 creation=0xA9E976C2F4533C3504678331f140911cb94Ec63b
+INFO [07-09|21:18:49.126] Transaction confirmed                    service=transactor tx=082aef..80ff0e block=a75dc7..7fec2b:8729040 effectiveGasPrice=1,000,401,808
+INFO [07-09|21:18:49.126] transaction confirmed                    id=05bd0e..e7e3ae completed=2 total=6 hash=0x082aef547b9d8a304ad81b86d3e41a6e7a8e88b0230a8c8f4f1205e05480ff0e nonce=164 creation=0xedaC72a7bd09Be8C3963EfE2822aADD68Cd7127d
+INFO [07-09|21:18:49.369] Transaction confirmed                    service=transactor tx=0a4764..caff5c block=a75dc7..7fec2b:8729040 effectiveGasPrice=1,000,401,808
+INFO [07-09|21:18:49.369] transaction confirmed                    id=24aa38..5c85d7 completed=3 total=6 hash=0x0a4764dbd0983a78c2782a45c93eacae6ca8e16c71e75700caa64142eacaff5c nonce=165 creation=0x0000000000000000000000000000000000000000
+INFO [07-09|21:18:49.369] transaction confirmed                    id=e71c0d..4e21d2 completed=4 total=6 hash=0x52ac0a4e5133e8f3b5974a8a8371051518a4708ea99feeaa069a9741ccfe8c2e nonce=166 creation=0x30FF10c20A2328e09B1cDc284144503b8F09558a
+INFO [07-09|21:18:49.369] transaction confirmed                    id=9ca7a3..12bf3c completed=5 total=6 hash=0xc46cb28b7cb524209260812cf74c3a3e1db24d4acf0622d23662bb3e13383c1e nonce=167 creation=0x0000000000000000000000000000000000000000
+INFO [07-09|21:18:49.369] transaction confirmed                    id=d17385..ea84e8 completed=6 total=6 hash=0x50be6dc694c15a7e4e3297c2e9186af2aca42545f89e14ae04ebc5ddeb508ade nonce=168 creation=0x0000000000000000000000000000000000000000
+INFO [07-09|21:18:49.374] deploying implementations                stage=deploy-implementations
+INFO [07-09|21:18:55.980] transaction broadcasted                  id=3acf98..ff3b5e nonce=0
+INFO [07-09|21:18:55.981] Publishing transaction                   service=transactor tx=805a4a..b70cb7 nonce=169 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=3,729,906
+INFO [07-09|21:18:56.057] Transaction successfully published       service=transactor tx=805a4a..b70cb7 nonce=169 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=3,729,906 tx=805a4a..b70cb7
+INFO [07-09|21:19:01.203] Transaction confirmed                    service=transactor tx=805a4a..b70cb7 block=9e92b0..a05f46:8729041 effectiveGasPrice=1,000,400,882
+INFO [07-09|21:19:01.203] transaction confirmed                    id=3acf98..ff3b5e completed=1 total=1 hash=0x805a4acc48aa770feb8c51971bd32f9505a7967aba64cc599c472ea59fb70cb7 nonce=0   creation=0x0000000000000000000000000000000000000000
+INFO [07-09|21:19:01.207] deploying OP chain using local allocs    stage=deploy-opchain id=0x000000000000000000000000000000000000000000000000000000000001d83d
+INFO [07-09|21:19:12.036] transaction broadcasted                  id=0f63e0..1dd080 nonce=170
+INFO [07-09|21:19:12.036] Publishing transaction                   service=transactor tx=72cd26..273b58 nonce=170 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=24,927,224
+INFO [07-09|21:19:12.097] Transaction successfully published       service=transactor tx=72cd26..273b58 nonce=170 gasTipCap=1,000,000,000 gasFeeCap=3,000,000,000 gasLimit=24,927,224 tx=72cd26..273b58
+INFO [07-09|21:19:25.248] Transaction confirmed                    service=transactor tx=72cd26..273b58 block=605725..d7aab4:8729043 effectiveGasPrice=1,000,416,947
+INFO [07-09|21:19:25.248] transaction confirmed                    id=0f63e0..1dd080 completed=1 total=1 hash=0x72cd26af859b7432207372af18ef5fe388cde46681dc8f880ba61ab5e5273b58 nonce=170 creation=0x0000000000000000000000000000000000000000
+INFO [07-09|21:19:25.254] alt-da deployment not needed             stage=deploy-alt-da
+INFO [07-09|21:19:25.258] additional dispute games deployment not needed stage=deploy-additional-dispute-games
+INFO [07-09|21:19:25.263] generating L2 genesis                    stage=generate-l2-genesis id=0x000000000000000000000000000000000000000000000000000000000001d83d
+WARN [07-09|21:19:25.269] RequiredProtocolVersion is empty         "!BADKEY"=&{} config=SuperchainL1DeployConfig
+WARN [07-09|21:19:25.269] RecommendedProtocolVersion is empty      "!BADKEY"=&{} config=SuperchainL1DeployConfig
+WARN [07-09|21:19:25.269] L2OutputOracleStartingBlockNumber is 0, should only be 0 for fresh chains "!BADKEY"=&{} config=OutputOracleDeployConfig
+INFO [07-09|21:19:25.309] L2Genesis: outputMode: none, fork: isthmus sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.309] Setting precompile 1 wei balances        sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.311] Setting Predeploy proxies                sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.313] Setting proxy deployed bytecode for addresses in range 0x4200000000000000000000000000000000000000 through 0x42000000000000000000000000000000000007fF sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.314] Setting proxy 0x4200000000000000000000000000000000000000 implementation: 0xc0D3C0d3C0d3C0D3c0d3C0d3c0D3C0d3c0d30000 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.314] Setting proxy 0x4200000000000000000000000000000000000002 implementation: 0xc0d3c0d3C0d3c0D3c0d3C0D3c0d3C0d3c0D30002 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.314] Skipping proxy at 0x4200000000000000000000000000000000000006 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.314] Setting proxy 0x4200000000000000000000000000000000000007 implementation: 0xC0d3c0d3c0D3c0D3C0d3C0D3C0D3c0d3c0d30007 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.315] Setting proxy 0x420000000000000000000000000000000000000F implementation: 0xc0d3C0d3C0d3c0D3C0D3C0d3C0d3C0D3C0D3000f sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.315] Setting proxy 0x4200000000000000000000000000000000000010 implementation: 0xC0d3c0d3c0D3c0d3C0D3c0D3C0d3C0D3C0D30010 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.315] Setting proxy 0x4200000000000000000000000000000000000011 implementation: 0xC0D3C0d3c0d3c0d3C0D3c0d3C0D3c0d3c0D30011 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.315] Setting proxy 0x4200000000000000000000000000000000000012 implementation: 0xc0D3c0d3C0d3c0d3c0D3c0d3c0D3c0D3c0D30012 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.315] Setting proxy 0x4200000000000000000000000000000000000013 implementation: 0xC0D3C0d3C0D3c0D3C0d3c0D3C0d3c0d3C0d30013 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.315] Setting proxy 0x4200000000000000000000000000000000000014 implementation: 0xC0D3c0d3c0d3c0d3c0D3C0d3C0D3C0D3c0d30014 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x4200000000000000000000000000000000000015 implementation: 0xc0d3C0D3C0D3c0D3C0D3C0d3C0D3c0D3c0d30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x4200000000000000000000000000000000000016 implementation: 0xC0D3C0d3C0d3c0d3C0d3C0D3c0D3c0d3c0D30016 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x4200000000000000000000000000000000000017 implementation: 0xc0d3C0d3C0d3C0d3C0d3c0d3C0D3C0d3C0D30017 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x4200000000000000000000000000000000000018 implementation: 0xC0d3C0D3c0d3C0d3c0d3c0D3C0D3C0d3C0D30018 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x4200000000000000000000000000000000000019 implementation: 0xC0d3c0D3c0d3C0D3C0D3C0d3c0D3C0D3c0d30019 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x420000000000000000000000000000000000001A implementation: 0xc0D3c0D3C0d3c0d3c0d3C0d3c0d3C0d3C0D3001A sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x420000000000000000000000000000000000001b implementation: 0xC0d3C0d3c0D3C0d3C0d3c0D3C0d3c0D3C0d3001B sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.316] Setting proxy 0x4200000000000000000000000000000000000020 implementation: 0xc0d3c0d3c0d3C0d3c0d3C0D3C0D3c0d3C0D30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.317] Setting proxy 0x4200000000000000000000000000000000000021 implementation: 0xC0D3c0D3C0d3c0D3c0D3C0D3c0D3c0d3c0d30021 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.319] Skipping proxy at 0x4200000000000000000000000000000000000042 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.431] Setting Sova Predeploy proxies           sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.432] Setting up Sova proxy at 0x2100000000000000000000000000000000000015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.432] Setting proxy 0x2100000000000000000000000000000000000015 implementation: 0xC1D3C1d3c1D3c1d3c1d3C1D3C1d3C1d3C1d30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.432] Setting up Sova proxy at 0x2100000000000000000000000000000000000020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.432] Setting proxy 0x2100000000000000000000000000000000000020 implementation: 0xc1d3c1d3C1D3C1D3C1d3C1d3c1D3C1d3C1d30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.432] Setting predeploy implementations with L1 contract dependencies: sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.432] - L1CrossDomainMessengerProxy: 0x51fdf9472594ac0D2b133555871e700c721D6996 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.433] - L1StandardBridgeProxy: 0xC0f85dD26d0A948Ef7Ae6925fA4E4030bdbAaa61 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.433] - L1ERC721BridgeProxy: 0xC9229B9f02705BA7942A50dF635Ed80cEEfC6E9E sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.433] Setting LegacyMessagePasser implementation at: 0xc0D3C0d3C0d3C0D3c0d3C0d3c0D3C0d3c0d30000 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.433] Setting DeployerWhitelist implementation at: 0xc0d3c0d3C0d3c0D3c0d3C0D3c0d3C0d3c0D30002 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.436] Setting WETH implementation at: 0x4200000000000000000000000000000000000006 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.437] Setting L2CrossDomainMessenger implementation at: 0xC0d3c0d3c0D3c0D3C0d3C0D3C0D3c0d3c0d30007 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.439] Setting GasPriceOracle implementation at: 0xc0d3C0d3C0d3c0D3C0D3C0d3C0d3C0D3C0D3000f sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.443] Setting L2StandardBridge implementation at: 0xC0d3c0d3c0D3c0d3C0D3c0D3C0d3C0D3C0D30010 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.448] Setting SequencerFeeVault implementation at: 0xC0D3C0d3c0d3c0d3C0D3c0d3C0D3c0d3c0D30011 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.448] Setting OptimismMintableERC20Factory implementation at: 0xc0D3c0d3C0d3c0d3c0D3c0d3c0D3c0D3c0D30012 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.451] Setting L1BlockNumber implementation at: 0xC0D3C0d3C0D3c0D3C0d3c0D3C0d3c0d3C0d30013 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.452] Setting L2ERC721Bridge implementation at: 0xC0D3c0d3c0d3c0d3c0D3C0d3C0D3C0D3c0d30014 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.454] Setting L1Block implementation at: 0xc0d3C0D3C0D3c0D3C0D3C0d3C0D3c0D3c0d30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.456] Setting L2ToL1MessagePasser implementation at: 0xC0D3C0d3C0d3c0d3C0d3C0D3c0D3c0d3c0D30016 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.459] Setting OptimismMintableERC721Factory implementation at: 0xc0d3C0d3C0d3C0d3C0d3c0d3C0D3C0d3C0D30017 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.459] Setting ProxyAdmin implementation at: 0xC0d3C0D3c0d3C0d3c0d3c0D3C0D3C0d3C0D30018 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.463] Setting BaseFeeVault implementation at: 0xC0d3c0D3c0d3C0D3C0D3C0d3c0D3C0D3c0d30019 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.464] Setting L1FeeVault implementation at: 0xc0D3c0D3C0d3c0d3c0d3C0d3c0d3C0d3C0D3001A sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.465] Setting OperatorFeeVault implementation at: 0xC0d3C0d3c0D3C0d3C0d3c0D3C0d3c0D3C0d3001B sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.465] Setting SchemaRegistry implementation at: 0xc0d3c0d3c0d3C0d3c0d3C0D3C0D3c0d3C0D30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.478] Setting EAS implementation at: 0xC0D3c0D3C0d3c0D3c0D3C0D3c0D3c0d3c0d30021 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.479] Governance not enabled, skipping setting governanace token sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.479] Setting SovaL1Block implementation at: 0xC1D3C1d3c1D3c1d3c1d3C1D3C1d3C1d3C1d30015 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.479] Setting SovaBTC implementation at: 0xc1d3c1d3C1D3C1D3C1d3C1d3c1D3C1d3C1d30020 sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.492] Setting MultiCall3 preinstall code at: 0xcA11bde05977b3631167028862bE2a173976CA11 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.492] Setting Create2Deployer preinstall code at: 0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.492] Setting Safe_v130 preinstall code at: 0x69f4D1788e39c87893C980c06EdF4b7f686e2938 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting SafeL2_v130 preinstall code at: 0xfb1bffC9d739B8D520DaF37dF666da4C687191EA sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting MultiSendCallOnly_v130 preinstall code at: 0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting SafeSingletonFactory preinstall code at: 0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting DeterministicDeploymentProxy preinstall code at: 0x4e59b44847b379578588920cA78FbF26c0B4956C sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting MultiSend_v130 preinstall code at: 0x998739BFdAAdde7C933B942a68053933098f9EDa sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting Permit2 preinstall code at: 0x000000000022D473030F116dDEE9F6B43aC78BA3 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.493] Setting SenderCreator_v060 preinstall code at: 0x7fc98430eAEdbb6070B35B39D798725049088348 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.494] Setting EntryPoint_v060 preinstall code at: 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.494] Setting SenderCreator_v070 preinstall code at: 0xEFC2c1444eBCC4Db75e7613d20C6a62fF67A167C sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.494] Setting EntryPoint_v070 preinstall code at: 0x0000000071727De22E5E9d8BAf0edAc6f37da032 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.494] Setting BeaconBlockRoots preinstall code at: 0x000F3df6D732807Ef1319fB7B8bB8522d0Beac02 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.494] Setting HistoryStorage preinstall code at: 0x0000F90827F1C53a10cb7A02335B175320002935 sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.494] Setting CreateX preinstall code at: 0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed sender=0xaE0bDc4eEAC5E950B67C6819B118761CaAF61946
+INFO [07-09|21:19:25.495] Activating ecotone in GasPriceOracle contract sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.495] Activating fjord in GasPriceOracle contract sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.495] Activating isthmus in GasPriceOracle contract sender=0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16
+INFO [07-09|21:19:25.534] Trie dumping started                     root=3bf5b9..9f2357
+INFO [07-09|21:19:25.544] Trie dumping complete                    accounts=2346 elapsed=10.712ms
+INFO [07-09|21:19:25.544] removing script from state-dump          addr=0xfdAf657f7146c1AB9db4d70cEd5FDEa7dC4906c0 label=L2Genesis
+INFO [07-09|21:19:25.544] removing script from state-dump          addr=0x8f0818c1e0a4cA9Bc005f61428f7f8a371464D38 label=
+INFO [07-09|21:19:25.709] setting start block                      stage=set-start-block strategy=live id=0x000000000000000000000000000000000000000000000000000000000001d83d
 ✅ Chain artifacts generated in: /Users/powvt/running-sova/config/testnet-sepolia
+Step 4: Extracting configuration files...
+✅ Exported genesis.json and rollup.json to: /Users/powvt/running-sova/config/testnet-sepolia
+
+🎉 Deployment Complete!
+=======================
+Configuration files:
+  - genesis.json: /Users/powvt/running-sova/config/testnet-sepolia/genesis.json
+  - rollup.json: /Users/powvt/running-sova/config/testnet-sepolia/rollup.json
+  - generated-keys.env: /Users/powvt/running-sova/config/testnet-sepolia/generated-keys.env
+
+⚠️  IMPORTANT: Save the generated private keys securely!
+
+Address Summary:
+  Admin roles use: 0x1844FE9b38db61803E089Ce6dAB413eF650F16BF
+  All other roles have unique addresses (see generated-keys.env)
+
+💡 Tip: To force regenerate keys even if file exists, use: FORCE_REGENERATE=true the default behavior

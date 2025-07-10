@@ -9,8 +9,9 @@
 #! for testing and development purposes only.
 services:
   # Core Sova components
+  # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:v0.0.6
+    image: ghcr.io/sovanetwork/sova-reth:latest
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
       SOVA_DERIVATION_XPUB: ${SOVA_DERIVATION_XPUB:-}
@@ -58,17 +59,6 @@ services:
       sentinel-server:
         condition: service_started
     profiles: [core]
-    healthcheck:
-      test: [
-        "CMD",
-        "curl",
-        "-H", "Content-Type: application/json",
-        "--data", '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}',
-        "http://localhost:8545"
-      ]
-      interval: 5s
-      timeout: 10s
-      retries: 5
 
   sentinel-server:
     image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
@@ -123,6 +113,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    profiles: [core]
   
   network-enclave:
     image: ghcr.io/sovanetwork/network-enclave:v0.0.7
@@ -147,6 +138,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+    profiles: [core]
 
   network-indexer:
     image: ghcr.io/sovanetwork/network-indexer:v0.1.4
@@ -178,6 +170,7 @@ services:
         condition: service_started
     volumes:
       - socket:/tmp
+    profiles: [core]
 
   network-utxos:
     image: ghcr.io/sovanetwork/network-utxos:v0.1.4
@@ -195,6 +188,7 @@ services:
     volumes:
       - utxo-data:/data
       - socket:/tmp
+    profiles: [core]
 
   # OP Stack components
   op-node:
@@ -233,7 +227,7 @@ services:
       - "7300:7300"     # Metrics
     depends_on:
       sova-reth:
-        condition: service_healthy
+        condition: service_started
     networks:
       - sova_network
     profiles: [op-stack]

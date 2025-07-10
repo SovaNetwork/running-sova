@@ -102,8 +102,8 @@ L1_CHAIN_ID=11155111
 L2_CHAIN_ID=120893
 L2_CHAIN_ID_HEX=0x000000000000000000000000000000000000000000000000000000000001d83d
 WORKDIR="$HOME/running-sova/config/testnet-sepolia"
-OP_DEPLOYER_IMAGE="us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.4.0-rc.2"
-ARTIFACTS_URL="https://github.com/SovaNetwork/optimism/releases/download/sova-op-deployer-v0.4.0-rc.2/sova-bedrock-op-testnet-artifacts.tar.gz"
+OP_DEPLOYER_IMAGE="us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.3.3"
+ARTIFACTS_URL="https://github.com/SovaNetwork/optimism/releases/download/op-deployer-v0.3.3-op-contracts-v3.0.0/sova-bedrock-op-testnet-artifacts.tar.gz"
 
 # ---------------------
 # Key Management - Check for existing keys or generate fresh ones
@@ -234,9 +234,9 @@ l1ContractsLocator = "${ARTIFACTS_URL}"
 l2ContractsLocator = "${ARTIFACTS_URL}"
 
 [superchainRoles]
-  SuperchainProxyAdminOwner = "${PROXY_ADMIN_ADDR}"
-  SuperchainGuardian = "${GUARDIAN_ADDR}"
+  ProxyAdminOwner = "${PROXY_ADMIN_ADDR}"
   ProtocolVersionsOwner = "${PROTOCOL_OWNER}"
+  Guardian = "${GUARDIAN_ADDR}"
 
 [[chains]]
   id = "${L2_CHAIN_ID_HEX}"

@@ -1,20 +1,20 @@
 configType = "custom"
 l1ChainID = 11155111
 fundDevAccounts = false
-useInterop = true
-l1ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/sova-op-deployer-v0.4.0-rc.2/sova-bedrock-op-testnet-artifacts.tar.gz"
-l2ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/sova-op-deployer-v0.4.0-rc.2/sova-bedrock-op-testnet-artifacts.tar.gz"
+useInterop = false
+l1ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/op-deployer-v0.3.3-op-contracts-v3.0.0/sova-bedrock-op-testnet-artifacts.tar.gz"
+l2ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/op-deployer-v0.3.3-op-contracts-v3.0.0/sova-bedrock-op-testnet-artifacts.tar.gz"
 
 [superchainRoles]
-  SuperchainProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-  SuperchainGuardian = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-  ProtocolVersionsOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  ProxyAdminOwner = "0x1844FE9b38db61803E089Ce6dAB413eF650F16BF"
+  ProtocolVersionsOwner = "0x1844FE9b38db61803E089Ce6dAB413eF650F16BF"
+  Guardian = "0x1844FE9b38db61803E089Ce6dAB413eF650F16BF"
 
 [[chains]]
   id = "0x000000000000000000000000000000000000000000000000000000000001d83d"
-  baseFeeVaultRecipient = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-  l1FeeVaultRecipient = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-  sequencerFeeVaultRecipient = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+  baseFeeVaultRecipient = "0xE2a5c2333DFa8F8822b852329E531C10069FDc99"
+  l1FeeVaultRecipient = "0x449d5717193C01B24a4b5BB0381eFf81d8C0D479"
+  sequencerFeeVaultRecipient = "0xDf4873267847ee5182c357493087aD5723457a11"
   eip1559DenominatorCanyon = 250
   eip1559Denominator = 50
   eip1559Elasticity = 6
@@ -22,13 +22,13 @@ l2ContractsLocator = "https://github.com/SovaNetwork/optimism/releases/download/
   operatorFeeConstant = 0
 
   [chains.roles]
-    l1ProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-    l2ProxyAdminOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-    systemConfigOwner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-    unsafeBlockSigner = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
-    batcher = "0xaB9A78B755B2550bd570352A1E54ebC15B49cd5B"
-    proposer = "0x9b454B3e1A0b1f4A0eD94264D73a9a72E876e9ea"
-    challenger = "0xeE8BF5335b6c795B8922754C2bA88A5C44bAcB16"
+    l1ProxyAdminOwner = "0x1844FE9b38db61803E089Ce6dAB413eF650F16BF"
+    l2ProxyAdminOwner = "0xA74880099580d451A11a811462F6B0f705389F8b"
+    systemConfigOwner = "0x5078e08612856D96107A699a4CB570c2f113BA2E"
+    unsafeBlockSigner = "0xC0B8A7838c85fFc4433863D9ECd96730b7BDFfd1"
+    batcher = "0xe8d07a89FAe1E88b7306DdEe906fab5B79a84F29"
+    proposer = "0xE6FED48ACe2d18a628Fa48cA7d44b3580e0fef24"
+    challenger = "0x64E4Ae5A28BaD426455f476f0AeC26728C83c21A"
 
   [chains.deployOverrides]
     l2BlockTime = 2
