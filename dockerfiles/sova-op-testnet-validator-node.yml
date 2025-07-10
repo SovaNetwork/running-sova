@@ -122,6 +122,7 @@ networks:
     driver: bridge
   sova_network:
     external: true
+    name: sova-op-testnet_sova_network
 
 volumes:
   validator-data:
