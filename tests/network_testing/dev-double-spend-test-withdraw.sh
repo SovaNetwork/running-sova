@@ -151,7 +151,7 @@ satoshi-suite decode-tx --tx-hex "$TX1_HEX"
 AMOUNT_SATS=$(btc_to_sats 49.999)
 
 # Find the vout index for the SovaBTC receive address
-VOUT_INDEX=$(find_vout_index "$TX1_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+VOUT_INDEX=$(find_vout_index_debug "$TX1_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
 
 if [ -z "$VOUT_INDEX" ]; then
     echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
@@ -200,7 +200,7 @@ TX3_OUTPUT=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --r
 TX3_HEX=$(get_tx_hex "$TX3_OUTPUT")
 
 # Find the vout index for the SovaBTC receive address
-VOUT_INDEX=$(find_vout_index "$TX3_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
+VOUT_INDEX=$(find_vout_index_debug "$TX3_HEX" "$SOVABTC_BITCOIN_RECEIVE_ADDRESS")
 
 if [ -z "$VOUT_INDEX" ]; then
     echo "Error: Could not find vout index for address $SOVABTC_BITCOIN_RECEIVE_ADDRESS"
