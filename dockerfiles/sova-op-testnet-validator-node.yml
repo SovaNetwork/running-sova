@@ -48,7 +48,7 @@ services:
     volumes:
       - validator-data:/var/lib/sova
       - ../config:/config
-    depends_on: []
+    depends_on:
       sentinel-server-validator:
         condition: service_started
     profiles: [core]
