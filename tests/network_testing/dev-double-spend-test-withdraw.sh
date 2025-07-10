@@ -51,31 +51,41 @@ btc_to_sats() {
 }
 
 # Function to find vout index for users SovaBTC deposit address
-find_vout_index() {
+# Debug version to see what's happening
+find_vout_index_debug() {
     local tx_hex=$1
     local target_address=$2
+
+    echo "=== DEBUG find_vout_index ===" >&2
+    echo "Target address: $target_address" >&2
 
     # Decode transaction and parse the output
     local decode_output=$(satoshi-suite decode-raw-tx --tx-hex "$tx_hex" 2>/dev/null)
 
     # Convert target address to uppercase for comparison
     local target_upper=$(echo "$target_address" | tr '[:lower:]' '[:upper:]')
+    echo "Target uppercase: $target_upper" >&2
 
-    # Extract the relevant section and use grep with line numbers
-    echo "$decode_output" | grep -n "n: [0-9]\|$target_upper" | \
-    awk -v target="$target_upper" '
-        /n: [0-9]+/ {
-            gsub(/.*n: /, "")
-            gsub(/,.*/, "")
-            vout_index = $0
-        }
-        {
-            if (index(toupper($0), target) > 0) {
-                print vout_index
-                exit
-            }
-        }
-    '
+    # Check if address exists in output
+    echo "Address found in output:" >&2
+    echo "$decode_output" | grep "$target_upper" >&2
+
+    # Find line number
+    local address_line_num=$(echo "$decode_output" | grep -n "$target_upper" | head -1 | cut -d: -f1)
+    echo "Address line number: $address_line_num" >&2
+    
+    if [ -n "$address_line_num" ]; then
+        echo "Lines up to address:" >&2
+        echo "$decode_output" | head -n "$address_line_num" | grep "n: [0-9]" >&2
+        
+        # Get the result
+        local result=$(echo "$decode_output" | head -n "$address_line_num" | grep "n: [0-9]" | tail -1 | sed 's/.*n: \([0-9]\+\).*/\1/')
+        echo "Final result: $result" >&2
+        echo "$result"
+    else
+        echo "Address not found!" >&2
+    fi
+    echo "=== END DEBUG ===" >&2
 }
 
 # Function to extract transaction hex
