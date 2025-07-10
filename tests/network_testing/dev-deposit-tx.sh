@@ -116,7 +116,7 @@ echo "Transaction Hex: $TX_HEX"
 
 # optional/debugging: decode the raw transaction
 # echo "Decoding raw transaction..."
-# satoshi-suite decode-raw-tx --tx-hex "$TX_HEX"
+# satoshi-suite decode-tx --tx-hex "$TX_HEX"
 
 # Convert TX_AMOUNT to satoshis 
 AMOUNT_SATS=$(btc_to_sats $TX_AMOUNT)

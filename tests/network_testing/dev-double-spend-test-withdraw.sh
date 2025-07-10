@@ -61,22 +61,17 @@ find_vout_index() {
     # Convert target address to uppercase for comparison
     local target_upper=$(echo "$target_address" | tr '[:lower:]' '[:upper:]')
 
-    # Extract vout entries and find the matching address
-    echo "$decode_output" | awk -v target="$target_upper" '
-        # Track current vout index
+    # Extract the relevant section and use grep with line numbers
+    echo "$decode_output" | grep -n "n: [0-9]\|$target_upper" | \
+    awk -v target="$target_upper" '
         /n: [0-9]+/ {
-            n_value = $2
-            gsub(/,/, "", n_value)
+            gsub(/.*n: /, "")
+            gsub(/,.*/, "")
+            vout_index = $0
         }
-
-        # Check for address match (case insensitive)
-        /Address<NetworkUnchecked>\(/ {
-            address_line = $0
-            gsub(/.*Address<NetworkUnchecked>\(/, "", address_line)
-            gsub(/\).*/, "", address_line)
-
-            if (toupper(address_line) == target) {
-                print n_value
+        {
+            if (index(toupper($0), target) > 0) {
+                print vout_index
                 exit
             }
         }
@@ -136,6 +131,11 @@ TX2_HEX=$(get_tx_hex "$TX2_OUTPUT")
 # For debugging
 echo "TX1 Hex: $TX1_HEX"
 echo "TX2 Hex: $TX2_HEX"
+
+# optional/debugging: decode the raw transaction
+echo "Decoding raw transaction..."
+satoshi-suite decode-tx --tx-hex "$TX1_HEX"
+
 
 # Convert 49.999 BTC to satoshis
 AMOUNT_SATS=$(btc_to_sats 49.999)
