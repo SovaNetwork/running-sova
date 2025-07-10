@@ -76,6 +76,7 @@ services:
     depends_on:
       bitcoin-regtest:
         condition: service_healthy
+        external: true
     profiles: [core]
   
   # OP Stack components
