@@ -28,18 +28,10 @@ docker-compose -f dockerfiles/dev-sova-node.yml -p sova-devnet --profile core --
 
 ```bash
 # run Sova OP sequencer
-docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env up --build -d
+docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-op-testnet-sequencer --profile core --profile op-stack --env-file ./.env up --build -d
 
 # remove all containers and volumes with:
-docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-op-testnet --profile core --profile op-stack --env-file ./.env down -v --rmi all
-```
-
-```bash
-# only run all auxiliary services used by sequencer
-docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-aux-services --env-file ./.env up --build -d
-
-# remove all containers and volumes with:
-docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-aux-services --env-file ./.env down -v --rmi all
+docker-compose -f dockerfiles/sova-op-testnet-sequencer-node.yml -p sova-op-testnet-sequencer --profile core --profile op-stack --env-file ./.env down -v --rmi all
 ```
 
 ### testnet - [dockerfiles/sova-op-testnet-validator-node](./dockerfiles/sova-op-testnet-validator-node.yml)

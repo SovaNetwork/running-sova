@@ -134,4 +134,4 @@ networks:
     driver: bridge
   sova_network:
     external: true
-    name: sova-op-testnet_sova_network
+    name: sova-op-testnet-sequencer_sova_network
