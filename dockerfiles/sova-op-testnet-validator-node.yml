@@ -13,7 +13,7 @@ services:
       node
       --chain /config/testnet-sepolia/genesis.json
       --btc-network ${NETWORK:-regtest}
-      --btc-network-url http://bitcoin-regtest
+      --btc-network-url http://${BITCOIN_NODE}
       --btc-rpc-username user
       --btc-rpc-password password
       --sentinel-url http://sentinel-server-validator:50051
@@ -30,7 +30,7 @@ services:
       --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
       --port=30304
       --discovery.port=30304
-      --rollup.sequencer-http http://sova-reth:8545
+      --rollup.sequencer-http http://${SEQUENCER}:8545
       --rollup.disable-tx-pool-gossip
       --bootnodes=${SEQUENCER_BOOTNODE}
       --metrics=0.0.0.0:6060
@@ -59,7 +59,7 @@ services:
       - SOVA_SENTINEL_HOST=0.0.0.0
       - SOVA_SENTINEL_PORT=50051
       - SOVA_SENTINEL_DB_PATH=/app/data/slot_locks.db
-      - BITCOIN_RPC_URL=http://bitcoin-regtest:18443
+      - BITCOIN_RPC_URL=http://${BITCOIN_NODE}:18443
       - BITCOIN_RPC_USER=user
       - BITCOIN_RPC_PASS=password
       - BITCOIN_CONFIRMATION_THRESHOLD=6
