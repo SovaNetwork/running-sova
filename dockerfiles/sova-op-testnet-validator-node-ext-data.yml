@@ -1,0 +1,136 @@
+# This docker-compose file is used to run a Sova OP testnet validator.
+
+# STORAGE SETUP:
+# This configuration assumes a 500 GiB EBS volume is mounted at /data
+# All persistent data is stored under /data/validator/ with the following structure:
+#   /data/validator/sova-reth/     - Sova node blockchain data and state
+#   /data/validator/sentinel/      - Sentinel server database and configuration
+#
+# Before running, create the required directories:
+#   sudo mkdir -p /data/validator/{sova-reth,sentinel}
+#   sudo chown -R $USER:$USER /data/
+#
+# This setup allows for:
+# - Centralized storage on a dedicated EBS volume
+# - Easy backup/snapshot of all validator data
+# - No conflicts with sequencer data (stored under /data/sequencer/)
+services:
+  # Core Sova components
+  # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
+  sova-reth-validator:
+    image: ghcr.io/sovanetwork/sova-reth:latest
+    environment:
+      SOVA_DERIVATION_XPUB: ${SOVA_DERIVATION_XPUB:-}
+    command: >
+      node
+      --chain /config/testnet-sepolia/genesis.json
+      --btc-network ${NETWORK:-regtest}
+      --btc-network-url http://bitcoin-regtest
+      --btc-rpc-username user
+      --btc-rpc-password password
+      --sentinel-url http://sentinel-server-validator:50051
+      --sentinel-confirmation-threshold 6
+      --http
+      --http.addr 0.0.0.0
+      --http.port 8545
+      --ws
+      --ws.addr 0.0.0.0
+      --ws.port 8546
+      --http.api all
+      --authrpc.addr 0.0.0.0
+      --authrpc.port 8551
+      --authrpc.jwtsecret=/config/testnet-sepolia/jwt.txt
+      --port=30304
+      --discovery.port=30304
+      --rollup.sequencer-http http://sova-reth:8545
+      --rollup.disable-tx-pool-gossip
+      --bootnodes=${SEQUENCER_BOOTNODE}
+      --metrics=0.0.0.0:6060
+      --datadir /var/lib/sova
+      --log.stdout.filter ${RUST_LOG:-info}
+    ports:
+      - "8547:8545"     # HTTP RPC (different external port)
+      - "8549:8546"     # WebSocket RPC (different external port)
+      - "30304:30304"   # P2P TCP (different port)
+      - "30304:30304/udp"  # P2P UDP (different port)
+      - "6061:6060"     # Metrics (different external port)
+    networks:
+      - sova_validator_network
+      - sova_network  # Connect to sequencer network
+    volumes:
+      - /data/validator/sova-reth:/var/lib/sova
+      - ../config:/config
+    depends_on:
+      sentinel-server-validator:
+        condition: service_started
+    profiles: [core]
+
+  sentinel-server-validator:
+    image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
+    environment:
+      - SOVA_SENTINEL_HOST=0.0.0.0
+      - SOVA_SENTINEL_PORT=50051
+      - SOVA_SENTINEL_DB_PATH=/app/data/slot_locks.db
+      - BITCOIN_RPC_URL=http://bitcoin-regtest:18443
+      - BITCOIN_RPC_USER=user
+      - BITCOIN_RPC_PASS=password
+      - BITCOIN_CONFIRMATION_THRESHOLD=6
+      - BITCOIN_REVERT_THRESHOLD=18
+      - BITCOIN_RPC_MAX_RETRIES=5
+      - RUST_LOG=${RUST_LOG:-info}
+    ports:
+      - "50052:50051"  # gRPC (different external port)
+    networks:
+      - sova_validator_network
+      - sova_network  # Connect to sequencer network
+    volumes:
+      - /data/validator/sentinel:/app/data
+    profiles: [core]
+  
+  # OP Stack components
+  op-node-validator:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.4
+    command: >
+      op-node
+      --l2=http://sova-reth-validator:8551
+      --l2.enginekind=reth
+      --l2.jwt-secret=/config/testnet-sepolia/jwt.txt
+      --interop.jwt-secret=/config/testnet-sepolia/jwt.txt
+      --verifier.l1-confs=4
+      --rollup.config=/config/testnet-sepolia/rollup.json
+      --rpc.addr=0.0.0.0
+      --rpc.port=9545
+      --rpc.enable-admin
+      --l1=${ALCHEMY_L1_RPC_URL}
+      --l1.rpckind=alchemy
+      --l1.beacon=${L1_BEACON_URL}
+      --p2p.listen.ip=0.0.0.0
+      --p2p.listen.tcp=9223
+      --p2p.listen.udp=9223
+      --p2p.scoring=light
+      --p2p.ban.peers=true
+      --metrics.enabled
+      --metrics.addr=0.0.0.0
+      --metrics.port=7300
+      --log.level=info
+    volumes:
+      - ../config:/config
+    ports:
+      - "9546:9545"     # RPC (different external port)
+      - "9223:9223"     # P2P TCP (different external port)
+      - "9223:9223/udp" # P2P UDP (different external port)  
+      - "7301:7300"     # Metrics (different external port)
+    depends_on:
+      sova-reth-validator:
+        condition: service_started
+    networks:
+      - sova_validator_network
+      - sova_network  # Connect to sequencer network
+    profiles: [op-stack]
+
+networks:
+  sova_validator_network:
+    driver: bridge
+  sova_network:
+    external: true
+    name: sova-op-testnet_sova_network
