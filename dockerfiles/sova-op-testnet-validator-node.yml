@@ -100,6 +100,7 @@ services:
       --metrics.enabled
       --metrics.addr=0.0.0.0
       --metrics.port=7300
+      --syncmode=execution-layer
       --log.level=info
     volumes:
       - ../config:/config
