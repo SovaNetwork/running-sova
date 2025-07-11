@@ -32,7 +32,7 @@ services:
       --discovery.port=30304
       --rollup.sequencer-http http://${SEQUENCER}:8545
       --rollup.disable-tx-pool-gossip
-      --bootnodes=${SEQUENCER_BOOTNODE}
+      --trusted-peers=${SEQUENCER_STATIC_PEER}
       --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
@@ -97,6 +97,7 @@ services:
       --p2p.listen.udp=9223
       --p2p.scoring=light
       --p2p.ban.peers=true
+      --p2p.static=${SEQUENCER_P2P_STATIC}
       --metrics.enabled
       --metrics.addr=0.0.0.0
       --metrics.port=7300
