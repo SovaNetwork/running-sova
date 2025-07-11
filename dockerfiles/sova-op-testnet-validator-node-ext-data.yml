@@ -109,6 +109,7 @@ services:
       --p2p.listen.udp=9223
       --p2p.scoring=light
       --p2p.ban.peers=true
+      --p2p.bootnodes=${SEQUENCER_P2P_BOOTNODE}
       --metrics.enabled
       --metrics.addr=0.0.0.0
       --metrics.port=7300
