@@ -6,7 +6,7 @@ services:
   # Core Sova components
   # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth-validator:
-    image: ghcr.io/sovanetwork/sova-reth:latest
+    image: ghcr.io/sovanetwork/sova-reth:v0.1.0
     environment:
       SOVA_DERIVATION_XPUB: ${SOVA_DERIVATION_XPUB:-}
     command: >
