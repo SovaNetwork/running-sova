@@ -1,30 +1,25 @@
 #!/bin/bash
 
-echo "Getting Sequencer Info..."
+# Script to extract sequencer peer information for validator configuration
 
-# Get ENR from op-node (more complete than just peer ID)
-SEQUENCER_ENR=$(curl -s -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"opp2p_self","params":[],"id":1}' \
-  http://localhost:9545 | jq -r '.result.ENR')
+echo "=== Getting Sequencer Peer Information ==="
 
-# Get sova-reth enode and extract pubkey (corrected container name)
-ENODE_PUBKEY=$(docker logs sova-op-testnet-sequencer-sova-reth-1 2>/dev/null | \
-  grep "enode://" | \
-  head -1 | \
-  sed 's/.*enode:\/\/\([a-f0-9A-F]*\)@.*/\1/')
+# Get Reth node ID from sequencer
+echo "Sequencer Reth Node ID:"
+SEQUENCER_RETH_NODE_ID=$(curl -s -X POST -H "Content-Type: application/json" \
+  --data '{"method":"admin_nodeInfo","params":[],"id":1,"jsonrpc":"2.0"}' \
+  http://localhost:8545 | jq -r '.result.enode' | cut -d'@' -f1)
+echo $SEQUENCER_RETH_NODE_ID
 
-# Get public IP
-PUBLIC_IP=$(curl -s ifconfig.me)
+# Get OP Node peer ID from sequencer  
+echo "Sequencer OP Node Peer ID:"
+SEQUENCER_OP_PEER_ID=$(curl -s -X POST -H "Content-Type: application/json" \
+  --data '{"method":"opp2p_self","params":[],"id":1,"jsonrpc":"2.0"}' \
+  http://localhost:9545 | jq -r '.result.peerID')
+echo $SEQUENCER_OP_PEER_ID
 
 echo ""
-echo "Sequencer Info:"
-echo "=================="
-echo "HTTP RPC: http://$PUBLIC_IP:8545"
-echo "OP P2P Bootnode: $SEQUENCER_ENR"
-echo "Reth P2P Bootnode: enode://$ENODE_PUBKEY@$PUBLIC_IP:30303"
-echo ""
-echo "Validator .env variables:"
-echo "SEQUENCER_HTTP_RPC=http://$PUBLIC_IP:8545"
-echo "SEQUENCER_P2P_BOOTNODE=$SEQUENCER_ENR"
-echo "SEQUENCER_BOOTNODE=enode://$ENODE_PUBKEY@$PUBLIC_IP:30303"
+echo "=== .env Configuration for Validator ==="
+echo "# Add these to your validator's .env file:"
+echo "SEQUENCER_RETH_STATIC_PEERS=${SEQUENCER_RETH_NODE_ID}@\${SEQUENCER_IP}:30303"
+echo "SEQUENCER_OP_STATIC_PEERS=/ip4/\${SEQUENCER_IP}/tcp/9222/p2p/${SEQUENCER_OP_PEER_ID}"
