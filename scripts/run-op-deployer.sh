@@ -101,7 +101,7 @@ EOF
 L1_CHAIN_ID=11155111
 L2_CHAIN_ID=120893
 L2_CHAIN_ID_HEX=0x000000000000000000000000000000000000000000000000000000000001d83d
-WORKDIR="$HOME/running-sova/config/testnet-sepolia"
+WORKDIR="$PWD/config/testnet-sepolia"
 OP_DEPLOYER_IMAGE="us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.3.3"
 ARTIFACTS_URL="https://github.com/SovaNetwork/optimism/releases/download/op-deployer-v0.3.3-op-contracts-v3.0.0/sova-bedrock-op-testnet-artifacts.tar.gz"
 
