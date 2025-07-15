@@ -103,7 +103,7 @@ L2_CHAIN_ID=120893
 L2_CHAIN_ID_HEX=0x000000000000000000000000000000000000000000000000000000000001d83d
 WORKDIR="$HOME/running-sova/config/testnet-sepolia"
 OP_DEPLOYER_IMAGE="us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.3.3"
-ARTIFACTS_URL="https://github.com/SovaNetwork/optimism/releases/download/op-deployer-v0.3.3-op-contracts-v3.0.0/sova-bedrock-op-testnet-artifacts.tar.gz"
+ARTIFACTS_URL="https://github.com/SovaNetwork/optimism/releases/download/op-deployer-v0.3.3-op-contracts-v3.0.0-892d01c/sova-bedrock-op-testnet-artifacts.tar.gz"
 
 # ---------------------
 # Key Management - Check for existing keys or generate fresh ones
@@ -155,7 +155,7 @@ else
     SEQUENCER_FEE_VAULT_RECIPIENT_ADDR=$SEQUENCER_FEE_VAULT_RECIPIENT_ADDRESS
 fi
 
-# Superchain Roles (these use ADMIN_ADDR as specified)
+# Superchain Roles
 PROTOCOL_OWNER=$ADMIN_ADDR
 GUARDIAN_ADDR=$ADMIN_ADDR
 PROXY_ADMIN_ADDR=$ADMIN_ADDR

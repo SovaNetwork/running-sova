@@ -5,6 +5,13 @@
 # https://github.com/SovaNetwork/running-sova
 # https://github.com/foundry-rs
 
+# Requirements:
+# - satoshi-suite
+# - foundry (cast)
+# - jq (for JSON parsing)
+# - bc (for calculations)
+# - curl
+
 # This script tests double-spend protection on a sova-reth execution client with SovaBTC
 #
 # It:
@@ -27,6 +34,7 @@ set -e
 WALLET_1="user"
 WALLET_2="miner"
 SOVABTC_CONTRACT_ADDRESS="0x2100000000000000000000000000000000000020" # native wrapped BTC predeploy address
+SOVAL1BLOCK_CONTRACT_ADDRESS="0x2100000000000000000000000000000000000015" # SovaL1Block predeploy address
 SOVABTC_BITCOIN_RECEIVE_ADDRESS="bcrt1qrd4khgwjv27mmxndwzdslj3rjgk2l2uhk43u9k"  # deterministic address based on the network signing wallet's bip32 derivation path
 DOUBLE_SPEND_RECEIVE_ADDRESS="bcrt1q6xxa0arlrk6jdz02alxc6smdv5g953v7zkswaw" # random address for double spend
 ETH_RPC_URL="http://localhost:8545"
@@ -36,6 +44,7 @@ CHAIN_ID="120893"
 
 # Bitcoin RPC Configuration
 BTC_RPC_URL="http://localhost"
+BTC_RPC_PORT="18443"  # Default regtest RPC port
 BTC_RPC_USER="user"
 BTC_RPC_PASS="password"
 BTC_NETWORK="regtest"
@@ -48,6 +57,70 @@ INDEXER_DB_URL="http://${INDEXER_DB_HOST}:${INDEXER_DB_PORT}"
 # Function to convert BTC to smallest unit (satoshis)
 btc_to_sats() {
     echo "$1 * 100000000" | bc | cut -d'.' -f1
+}
+
+# Function to get Bitcoin block hash using Bitcoin Core RPC
+get_block_hash() {
+    local block_height=$1
+    
+    # Use Bitcoin Core RPC to get block hash by height
+    local response=$(curl -s --user "$BTC_RPC_USER:$BTC_RPC_PASS" \
+        --data-binary "{\"jsonrpc\": \"1.0\", \"id\":\"script\", \"method\": \"getblockhash\", \"params\": [$block_height]}" \
+        -H 'content-type: text/plain;' \
+        "${BTC_RPC_URL}:${BTC_RPC_PORT}/")
+    
+    # Check if response contains an error
+    if echo "$response" | jq -e '.error' > /dev/null 2>&1; then
+        echo "Error getting block hash for height $block_height" >&2
+        return 1
+    fi
+    
+    # Extract hash from JSON response (remove quotes)
+    local hash=$(echo "$response" | jq -r '.result')
+    
+    # Validate hash format (should be 64 hex characters)
+    if [[ ! "$hash" =~ ^[a-fA-F0-9]{64}$ ]]; then
+        echo "Invalid block hash format: $hash" >&2
+        return 1
+    fi
+    
+    echo "$hash"
+}
+
+# Function to update SovaL1Block with current Bitcoin state
+update_sova_l1_block() {
+    echo "Updating SovaL1Block contract with Bitcoin block data..."
+    
+    # Get current Bitcoin block height
+    local current_height=$(satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" get-block-height | grep "Current block height:" | cut -d' ' -f8)
+    
+    # Calculate height 6 blocks back (ensure it's not negative)
+    local six_blocks_back=$((current_height - 6))
+    if [ $six_blocks_back -lt 0 ]; then
+        six_blocks_back=0
+    fi
+    
+    # Get block hash from 6 blocks back
+    local block_hash=$(get_block_hash $six_blocks_back)
+    
+    if [ $? -ne 0 ] || [ -z "$block_hash" ]; then
+        echo "Warning: Could not get block hash for height $six_blocks_back, skipping SovaL1Block update"
+        return
+    fi
+    
+    echo "Current Bitcoin height: $current_height"
+    echo "Setting L1Block with height: $current_height, hash from block $six_blocks_back: $block_hash"
+    
+    # Call setBitcoinBlockData on SovaL1Block contract
+    cast send \
+        --rpc-url "$ETH_RPC_URL" \
+        --private-key "$ETH_PRIVATE_KEY" \
+        --gas-limit 100000 \
+        --chain-id "$CHAIN_ID" \
+        "$SOVAL1BLOCK_CONTRACT_ADDRESS" \
+        "setBitcoinBlockData(uint64,bytes32)" \
+        "$current_height" \
+        "0x$block_hash"
 }
 
 # Function to find vout index for users SovaBTC deposit address
@@ -123,6 +196,7 @@ satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "
 echo "Mining initial blocks..."
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_1" --blocks 1
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 100
+update_sova_l1_block
 
 echo "Creating Bitcoin transactions..."
 # First transaction with 0.001 fee
@@ -138,9 +212,8 @@ echo "TX1 Hex: $TX1_HEX"
 echo "TX2 Hex: $TX2_HEX"
 
 # optional/debugging: decode the raw transaction
-echo "Decoding raw transaction..."
-satoshi-suite decode-tx --tx-hex "$TX1_HEX"
-
+# echo "Decoding raw transaction..."
+# satoshi-suite decode-raw-tx --tx-hex "$TX1_HEX"
 
 # Convert 49.999 BTC to satoshis
 AMOUNT_SATS=$(btc_to_sats 49.999)
@@ -178,6 +251,7 @@ echo "Mining confirmation blocks for double-spend transaction..."
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 19
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_1" --blocks 1
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 100
+update_sova_l1_block
 
 echo "Attempting to finalize first deposit (should succeed and revert the pending balance slot back to zero due to double spend)..."
 cast send \
@@ -222,6 +296,7 @@ check_contract_state "After second deposit submission (before finalization)"
 
 echo "Mining confirmation blocks for second deposit..."
 satoshi-suite --rpc-url "$BTC_RPC_URL" --network "$BTC_NETWORK" --rpc-username "$BTC_RPC_USER" --rpc-password "$BTC_RPC_PASS" mine-blocks --wallet-name "$WALLET_2" --blocks 7
+update_sova_l1_block
 
 echo "Finalizing second deposit..."
 cast send \
