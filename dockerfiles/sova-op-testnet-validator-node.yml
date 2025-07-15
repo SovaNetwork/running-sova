@@ -83,7 +83,6 @@ services:
       --l2=http://sova-reth-validator:8551
       --l2.enginekind=reth
       --l2.jwt-secret=/config/testnet-sepolia/jwt.txt
-      --interop.jwt-secret=/config/testnet-sepolia/jwt.txt
       --verifier.l1-confs=4
       --rollup.config=/config/testnet-sepolia/rollup.json
       --rpc.addr=0.0.0.0
