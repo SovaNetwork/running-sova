@@ -108,6 +108,37 @@ services:
       retries: 3
     profiles: [core]
   
+  sova-bitcoin-sync:
+    image: ghcr.io/sovanetwork/sova-bitcoin-sync:v0.0.1
+    environment:
+      ADMIN_PRIVATE_KEY: ${ADMIN_SOVA_SYNC_PRIVATE_KEY}
+      RUST_LOG: ${RUST_LOG:-info}
+    command: >
+      --btc-rpc-url http://bitcoin-regtest:18443
+      --btc-rpc-user user
+      --btc-rpc-password password
+      --sequencer-rpc-url http://sova-reth:8545
+      --contract-address 0x2100000000000000000000000000000000000015
+      --update-interval 10
+      --confirmation-blocks 6
+      --health-port 8080
+    ports:
+      - "8080:8080" # Health check endpoint
+    networks:
+      - sova_network
+    depends_on:
+      bitcoin-regtest:
+        condition: service_healthy
+      sova-reth:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    profiles: [core]
+  
   network-enclave:
     image: ghcr.io/sovanetwork/network-enclave:v0.0.7
     environment:
