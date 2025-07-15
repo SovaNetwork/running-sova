@@ -232,11 +232,7 @@ services:
       --l1=${ALCHEMY_L1_RPC_URL}
       --l1.rpckind=alchemy
       --l1.beacon=${L1_BEACON_URL}
-      --p2p.listen.ip=0.0.0.0
-      --p2p.listen.tcp=9222
-      --p2p.listen.udp=9222
-      --p2p.scoring=none
-      --p2p.ban.peers=false
+      --p2p.disable
       --p2p.sequencer.key=${SEQUENCER_PRIVATE_KEY}
       --metrics.enabled
       --metrics.addr=0.0.0.0
