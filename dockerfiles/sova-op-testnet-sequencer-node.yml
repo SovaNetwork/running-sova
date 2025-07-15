@@ -11,7 +11,7 @@ services:
   # Core Sova components
   # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth:
-    image: ghcr.io/sovanetwork/sova-reth:v0.1.1
+    image: ghcr.io/sovanetwork/sova-reth:v0.1.2
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
       SOVA_DERIVATION_XPUB: ${SOVA_DERIVATION_XPUB:-}
