@@ -9,6 +9,7 @@ services:
     image: ghcr.io/sovanetwork/sova-reth:v0.1.2
     environment:
       SOVA_DERIVATION_XPUB: ${SOVA_DERIVATION_XPUB:-}
+      SOVA_SEQUENCER_MODE: false
     command: >
       node
       --chain /config/testnet-sepolia/genesis.json
