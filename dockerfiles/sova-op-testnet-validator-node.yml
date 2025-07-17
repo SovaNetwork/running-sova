@@ -6,6 +6,7 @@ services:
   # Core Sova components
   # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth-validator:
+    container_name: sova-reth
     image: ghcr.io/sovanetwork/sova-reth:v0.1.2
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
@@ -34,7 +35,7 @@ services:
       --discovery.port=30304
       --rollup.sequencer-http http://${SEQUENCER}:8545
       --rollup.disable-tx-pool-gossip
-      --trusted-peers=${SEQUENCER_RETH_STATIC_PEERS:-}
+      --trusted-peers=${VALIDATOR_RETH_STATIC_PEERS:-}
       --metrics=0.0.0.0:6060
       --datadir /var/lib/sova
       --log.stdout.filter ${RUST_LOG:-info}
@@ -56,6 +57,7 @@ services:
     profiles: [core]
 
   sentinel-server-validator:
+    container_name: sentinel
     image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
     environment:
       - SOVA_SENTINEL_HOST=0.0.0.0
@@ -79,6 +81,7 @@ services:
   
   # OP Stack components
   op-node-validator:
+    container_name: op-node
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.4
     command: >
       op-node
@@ -98,7 +101,7 @@ services:
       --p2p.listen.udp=9223
       --p2p.scoring=light
       --p2p.ban.peers=true
-      --p2p.static=${SEQUENCER_OP_STATIC_PEERS:-}
+      --p2p.static=${VALIDATOR_OP_STATIC_PEERS:-}
       --metrics.enabled
       --metrics.addr=0.0.0.0
       --metrics.port=7300

@@ -11,6 +11,7 @@ services:
   # Core Sova components
   # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth:
+    container_name: sova-reth
     image: ghcr.io/sovanetwork/sova-reth:v0.1.2
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
@@ -61,6 +62,7 @@ services:
     profiles: [core]
 
   sentinel-server:
+    container_name: sentinel
     image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
     environment:
       - SOVA_SENTINEL_HOST=0.0.0.0
@@ -86,6 +88,7 @@ services:
   
   # Supporting Sova components
   bitcoin-regtest:
+    container_name: bitcoin-core
     image: ruimarinho/bitcoin-core@sha256:79dd32455cf8c268c63e5d0114cc9882a8857e942b1d17a6b8ec40a6d44e3981 # ruimarinho/bitcoin-core:24
     command:
       -regtest=1
@@ -97,6 +100,7 @@ services:
       -rpcpassword=password
     ports:
       - "18443:18443"
+      - "8332:8332"
     networks:
       - sova_network
     volumes:
@@ -109,6 +113,7 @@ services:
     profiles: [core]
   
   sova-bitcoin-sync:
+    container_name: bitcoin-sync
     image: ghcr.io/sovanetwork/sova-bitcoin-sync:v0.0.1
     environment:
       ADMIN_PRIVATE_KEY: ${ADMIN_SOVA_SYNC_PRIVATE_KEY}
@@ -140,6 +145,7 @@ services:
     profiles: [core]
   
   network-enclave:
+    container_name: network-enclave
     image: ghcr.io/sovanetwork/network-enclave:v0.0.7
     environment:
       - BIP32_SEED=${BIP32_SEED}
@@ -165,6 +171,7 @@ services:
     profiles: [core]
 
   network-indexer:
+    container_name: network-indexer
     image: ghcr.io/sovanetwork/network-indexer:v0.1.4
     environment:
       - RUST_LOG=${RUST_LOG:-info}
@@ -197,6 +204,7 @@ services:
     profiles: [core]
 
   network-utxos:
+    container_name: network-utxos
     image: ghcr.io/sovanetwork/network-utxos:v0.1.4
     environment:
       - RUST_LOG=${RUST_LOG:-info}
@@ -216,6 +224,7 @@ services:
 
   # OP Stack components
   op-node:
+    container_name: op-node
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.4
     command: >
       op-node
@@ -253,6 +262,7 @@ services:
     profiles: [op-stack]
 
   op-batcher:
+    container_name: op-batcher
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-batcher:v1.13.1
     command: >
       op-batcher
@@ -279,6 +289,7 @@ services:
     profiles: [op-stack]
 
   op-proposer:
+    container_name: op-proposer
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:v1.10.0
     command: >
       op-proposer
