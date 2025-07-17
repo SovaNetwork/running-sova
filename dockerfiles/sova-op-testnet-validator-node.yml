@@ -6,6 +6,7 @@ services:
   # Core Sova components
   # Reth docs for OP chains: https://reth.rs/run/optimism.html?highlight=sequencer#running-op-reth
   sova-reth-validator:
+    container_name: sova-reth
     image: ghcr.io/sovanetwork/sova-reth:v0.1.2
     environment:
       NETWORK_UTXOS_API_KEY: ${INDEXER_SHARED_API_KEY:-}
@@ -56,6 +57,7 @@ services:
     profiles: [core]
 
   sentinel-server-validator:
+    container_name: sentinel
     image: ghcr.io/sovanetwork/sova-sentinel:v0.1.2
     environment:
       - SOVA_SENTINEL_HOST=0.0.0.0
@@ -79,6 +81,7 @@ services:
   
   # OP Stack components
   op-node-validator:
+    container_name: op-node
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.13.4
     command: >
       op-node
